@@ -1,0 +1,144 @@
+﻿
+@model BookMVC.Entities.Order
+@{
+     ViewBag.Title = "CheckOut";
+     Layout = "~/Views/Shared/_Layout.cshtml";
+     var shippingCost = 0;
+     var tPrice = (decimal)ViewBag.totalPrice;
+     var tQuantity = (int)ViewBag.totalQuantity;
+     var tProtion = (decimal)ViewBag.totalPromotion;
+     var Total = tPrice - tProtion;
+     var realTotal = Total + shippingCost;
+}
+<div id="all">
+     <div id="content">
+          <div class="container-fluid">
+               <div class="row">
+                    <div class="col-lg-12">
+                         <!-- breadcrumb-->
+                         <nav aria-label="breadcrumb">
+                              <ol class="breadcrumb">
+                                   <li class="breadcrumb-item"><a href="@Url.Action("Index","Home")">Trang chủ</a></li>
+                                   <li aria-current="page" class="breadcrumb-item active">Kiểm tra - Thông tin người nhận</li>
+                              </ol>
+                         </nav>
+                    </div>
+                    <div id="checkout" class="col-lg-9">
+                         <div class="box">
+                              @using (Html.BeginForm("CheckOut", "Order", FormMethod.Post))
+                              {
+                                   @Html.AntiForgeryToken()
+                                   <h1>Kiểm tra - Thông tin người nhận</h1>
+                                   <div class="nav flex-column flex-md-row nav-pills text-center">
+                                        <a href="@Url.Action("CheckOut","Order")" class="nav-link flex-sm-fill text-sm-center active"><i class="fa fa-map-marker"></i>Thông tin người nhận</a>
+                                        <a href="#" class="nav-link flex-sm-fill text-sm-center disabled"><i class="fa fa-truck"></i>Phương thức vận chuyển</a>
+                                        <a href="#" class="nav-link flex-sm-fill text-sm-center disabled"><i class="fa fa-money"></i>Phương thức thanh toán</a>
+                                        <a href="#" class="nav-link flex-sm-fill text-sm-center disabled"><i class="fa fa-eye"></i> Đơn hàng của tôi</a>
+                                   </div>
+                                   <div class="content py-3">
+                                        <div class="row">
+                                             <div class="col-md-6">
+                                                  <div class="form-group">
+                                                       @Html.DisplayNameFor(x => Model.ShipName)
+                                                       <div class="input-group">
+                                                            <span class="btn btn-primary noneradius-right"><i class="fa fa-user icon" aria-hidden="true"></i></span>
+                                                            @Html.TextBoxFor(u => Model.ShipName, new { @class = "form-control", placeholder = "Điền tên người nhận" })
+                                                            @*<input type="text" class="form-control" name="ShipName" id="ShipName" placeholder="Enter your Name" />*@
+                                                            <div class="text-danger " id="er_Email">@Html.ValidationMessageFor(x => x.ShipName)</div>
+                                                       </div>
+                                                  </div>
+                                             </div>
+                                             <div class="col-md-6">
+                                                  <div class="form-group">
+                                                       @Html.DisplayNameFor(x => Model.ShipEmail)
+                                                       <div class="input-group">
+                                                            <span class="btn btn-primary noneradius-right"><i class="fa fa-envelope icon" aria-hidden="true"></i></span>
+                                                            @Html.TextBoxFor(u => Model.ShipEmail, new { @class = "form-control", placeholder = "Điền địa chỉ email" })
+                                                            @*<input type="text" class="form-control" name="Email" id="Email" placeholder="Enter your Email" />*@
+                                                       </div>
+                                                       <div class="text-danger " id="er_Email">@Html.ValidationMessageFor(x => x.ShipEmail)</div>
+                                                  </div>
+                                             </div>
+                                        </div>
+                                        <!-- /.row-->
+                                        <div class="row">
+                                             <div class="col-md-6">
+                                                  <div class="form-group">
+                                                       @Html.DisplayNameFor(x => Model.ShipAdress)
+                                                       <div class="input-group">
+                                                            <span class="btn btn-primary noneradius-right"><i class="fa fa-home icon" aria-hidden="true"></i></span>
+                                                            @Html.TextBoxFor(u => Model.ShipAdress, new { @class = "form-control", placeholder = "Điền địa chỉ nhận hàng" })
+                                                            @*<input type="text" class="form-control" name="Address" id="Address" placeholder="Enter your address" value="" />*@
+                                                       </div>
+                                                       <div class="text-danger " id="er_Address">@Html.ValidationMessageFor(x => x.ShipAdress)</div>
+                                                  </div>
+                                             </div>
+                                             <div class="col-md-6">
+                                                  <div class="form-group">
+                                                       @Html.DisplayNameFor(x => Model.ShipMobile)
+                                                       <div class="input-group">
+                                                            <span class="btn btn-primary noneradius-right"><i class="fa fa-phone icon" aria-hidden="true"></i></span>
+                                                            @Html.TextBoxFor(u => Model.ShipMobile, new { @class = "form-control", placeholder = "Điền số điện thoại người nhận" })
+                                                            @*<input type="tel" class="form-control" name="Phone" id="Phone" placeholder="Enter your Phome number" />*@
+                                                       </div>
+                                                       <div class="text-danger " id="er_Phone">@Html.ValidationMessageFor(x => x.ShipMobile)</div>
+                                                  </div>
+                                             </div>
+                                        </div>
+                                   </div>
+                                   <!-- /.row-->
+                                   <div class="box-footer d-flex justify-content-between">
+                                        <a href="@Url.Action("Index","Cart")" class="btn btn-outline-secondary"><i class="fa fa-chevron-left"></i>Trở lại giỏ hàng</a>
+                                        <button type="submit" class="btn btn-primary">Sang hình thức vận chuyển<i class="fa fa-chevron-right"></i></button>
+                                   </div>
+                              }
+                         </div>
+                         <!-- /.box-->
+                    </div>
+                    <!-- /.col-lg-9-->
+                    <!-- Order preview-->
+                    <div class="col-md-3">
+                         <div id="order-summary" class="card">
+                              <div class="card-header">
+                                   <h3 class="mt-4 mb-4">Đơn hàng dự kiến</h3>
+                              </div>
+                              <div class="card-body">
+                                   <div class="table-responsive">
+                                        <table class="table">
+                                             <tbody>
+                                                  <tr>
+                                                       <td>Số sản phẩm</td>
+                                                       <th style="text-align:center"><span id="tQuantity">@tQuantity sản phẩm</span></th>
+                                                  </tr>
+                                                  <tr>
+                                                       <td>Giá trị đơn hàng</td>
+                                                       <th style="text-align:right"><span id="tPrice">@tPrice.ToString("N0")</span> VNĐ</th>
+                                                  </tr>
+                                                  <tr>
+                                                       <td>Tổng khuyến mãi</td>
+                                                       <th style="text-align:right"><span id="tPromotion">@tProtion.ToString("N0")</span> VNĐ</th>
+                                                  </tr>
+                                                  <tr>
+                                                       <td>Sau khuyến mãi</td>
+                                                       <th style="text-align:right"><span id="Total">@Total.ToString("N0")</span> VNĐ</th>
+                                                  </tr>
+                                                  <tr>
+                                                       <td>Phí vận chuyển</td>
+                                                       <th style="text-align:right"><span id="shippingCost">0</span> VNĐ</th>
+                                                  </tr>
+                                                  <tr class="total">
+                                                       <th>Thành tiền</th>
+                                                       <td style="text-align:right"><span id="realPrice">@realTotal.ToString("N0")</span> VNĐ</td>
+                                                  </tr>
+                                             </tbody>
+                                        </table>
+                                   </div>
+                              </div>
+                         </div>
+                    </div>
+                    <!-- /.col-lg-3-->
+               </div>
+          </div>
+     </div>
+</div>
+

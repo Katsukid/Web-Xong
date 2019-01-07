@@ -1,0 +1,237 @@
+﻿
+@model List<BookMVC.Models.BookViewModel>
+
+@{
+     ViewBag.Title = "BookBy";
+     Layout = "~/Views/Shared/_Layout.cshtml";
+     var authorlocal = (IEnumerable<BookMVC.Models.AuthorViewModel>)ViewBag.AuthorLocal;
+     var authorforeign = (IEnumerable<BookMVC.Models.AuthorViewModel>)ViewBag.AuthorForgery;
+     var publisher = (IEnumerable<BookMVC.Models.PublisherViewModel>)ViewBag.Publisher;
+     var category = (List<BookMVC.Models.CategoryViewModel>)ViewBag.Category;
+     var lsBook = (IEnumerable<BookMVC.Models.BookViewModel>)ViewBag.lsBook;
+     var totalBooks = lsBook.Count();
+     var showwing = 6;
+     if (totalBooks < 6)
+     {
+          showwing = totalBooks;
+     }
+}
+@section jsFooter{
+     <script src="~/assets/Client/js/controller/multiSearch.js"></script>
+}
+<div id="all">
+     <div id="content">
+          <div class="container">
+               <div class="row">
+                    <div class="col-lg-12">
+                         <!-- breadcrumb-->
+                         <nav aria-label="breadcrumb">
+                              <ol class="breadcrumb">
+                                   <li class="breadcrumb-item"><a href="/Home/Index">Trang chủ</a></li>
+                                   <li aria-current="page" class="breadcrumb-item active">Tìm kiếm sách</li>
+                              </ol>
+                         </nav>
+                    </div>
+                    <div class="col-lg-3">
+                         @using (Html.BeginForm("", "", FormMethod.Post, new { @id = "filter" }))
+                         {
+
+                              @Html.AntiForgeryToken()
+                              <!--
+          *** MENUS AND FILTERS ***
+          _________________________________________ ________________
+          -->
+                              <div class="card sidebar-menu mb-4">
+                                   <div class="card-header">
+                                        <h3 class="h4 card-title">Danh mục <button class="btn btn-sm btn-danger pull-right" id="clear-bookcate" type="button"><i class="fa fa-times-circle"></i> Clear</button></h3>
+                                   </div>
+                                   <div class="card-body p-1">
+                                        <input type="hidden" id="select_bookcate" name="select_bookcate" value="0" />
+                                        <ul class="nav nav-pills flex-column category-menu" id="list_bookcate">
+                                             @foreach (var c in category)
+                                             {
+                                                  if (c.Category.Name == "Nổi bật")
+                                                  {
+                                                       continue;
+                                                  }
+                                                  <li>
+                                                       <a class="nav-link" data-toggle="collapse" data-target="#list_@c.Category.ID" style="color:#4fbfa8;cursor:pointer">@c.Category.Name <span class="badge badge-secondary">@c.numberBooks</span></a>
+                                                       <ul class="list-unstyled collapse checkbox pl-3" id="list_@c.Category.ID">
+                                                            @foreach (var b in c.lsBookCategory)
+                                                            {
+                                                                 @*<li>@Html.ActionLink(b.bookCategory.Name +"(" + b.numberBooks.ToString() + ")", "BookBy", "Book", new { id = b.bookCategory.ID }, new { @class = "nav-link" })</li>*@
+                                                                 <li class="checkbox">
+                                                                      <input class="checkbox-bookcate" type="checkbox" data-id="@b.bookCategory.ID" id="bookcate_@b.bookCategory.ID" />
+                                                                      <label for="bookcate_@b.bookCategory.ID"> @(b.bookCategory.Name) (@b.numberBooks.ToString())</label>
+                                                                 </li>
+                                                            }
+                                                       </ul>
+                                                  </li>
+                                             }
+                                        </ul>
+                                   </div>
+                              </div>
+                              <div class="card sidebar-menu mb-4">
+                                   <div class="card-header">
+                                        <h3 class="h4 card-title">Tác giả <button class="btn btn-sm btn-danger pull-right" id="clear-author" type="button"><i class="fa fa-times-circle"></i> Clear</button></h3>
+                                   </div>
+                                   @*<input type="hidden" id="select_author" name="select_author" value="0" />*@
+                                   <div class="card-body p-1">
+                                        <input type="hidden" id="select_author" name="select_author" value="0" />
+                                        <ul class="nav nav-pills flex-column category-menu">
+                                             <li>
+                                                  <a class="nav-link" data-toggle="collapse" data-target="#list_local" style="color:#4fbfa8;cursor:pointer">Trong nước <span class="badge badge-secondary">@authorlocal.Sum(x => x.numberBooks)</span></a>
+                                                  <ul class="list-unstyled collapse pl-3" id="list_local">
+                                                       @foreach (var al in authorlocal)
+                                                       {
+                                                            <li class="checkbox">
+                                                                 <input class="checkbox-author" type="checkbox" data-id="@al.Author.ID" id="author_@al.Author.ID">
+                                                                 <label for="author_@al.Author.ID"> @al.Author.Name (@al.numberBooks)</label>
+                                                            </li>
+                                                       }
+                                                  </ul>
+                                             </li>
+                                        </ul>
+                                        <ul class="nav nav-pills flex-column category-menu">
+                                             <li>
+                                                  <a class="nav-link" data-toggle="collapse" data-target="#list_foreign" style="color:#4fbfa8;cursor:pointer">Nước ngoài <span class="badge badge-secondary">@authorforeign.Sum(x => x.numberBooks)</span></a>
+                                                  <ul class="list-unstyled collapse pl-3" id="list_foreign">
+                                                       @foreach (var af in authorforeign)
+                                                       {
+                                                            <li class="checkbox">
+                                                                 <input class="checkbox-author" type="checkbox" data-id="@af.Author.ID" id="author_@af.Author.ID">
+                                                                 <label for="author_@af.Author.ID"> @af.Author.Name (@af.numberBooks)</label>
+                                                            </li>
+                                                       }
+                                                  </ul>
+                                             </li>
+                                        </ul>
+                                        @*<button class="btn btn-default btn-sm btn-primary"><i class="fa fa-pencil"></i> Apply</button>*@
+                                   </div>
+                              </div>
+                              <div class="card sidebar-menu mb-4">
+                                   <div class="card-header">
+                                        <h3 class="h4 card-title">Nhà xuất bản <button class="btn btn-sm btn-danger pull-right" id="clear-publisher" type="button"><i class="fa fa-times-circle"></i> Clear</button></h3>
+                                   </div>
+                                   <div class="card-body p-1">
+                                        <input type="hidden" id="select_publisher" name="select_publisher" value="0" />
+                                        <ul class="nav nav-pills flex-column category-menu">
+                                             <li>
+                                                  <a class="nav-link" data-toggle="collapse" data-target="#list_publisher" style="color:#4fbfa8;cursor:pointer">Nhà xuất bản <span class="badge badge-secondary">@publisher.Sum(x => x.numberBooks)</span></a>
+                                                  <ul class="list-unstyled collapse pl-3" id="list_publisher">
+                                                       @foreach (var p in publisher)
+                                                       {
+                                                            <li class="checkbox">
+                                                                 <input class="checkbox-publisher" type="checkbox" data-id="@p.Publisher.ID" id="publisher_@p.Publisher.ID">
+                                                                 <label for="publisher_@p.Publisher.ID"> @p.Publisher.Name (@p.numberBooks)</label>
+                                                            </li>
+                                                       }
+                                                  </ul>
+                                             </li>
+                                        </ul>                                        
+                                        @*<button class="btn btn-default btn-sm btn-primary"><i class="fa fa-pencil"></i> Apply</button>*@
+                                   </div>
+                              </div>
+                              <div class="card sidebar-menu mb-4">
+                                   <div class="card-header">
+                                        <h3 class="h4 card-title">Phát hành sau <button class="btn btn-sm btn-danger pull-right" type="button" id="clear_date"><i class="fa fa-times-circle"></i> Clear</button></h3>
+                                   </div>
+                                   <input type="hidden" value="" id="publishdate" name="publishdate" />
+                                   <div class="card-body form-inline pl-2">
+                                        <div class="form-group">
+                                             <div style="color:black;cursor:pointer" class="form-control">Ngày:</div><input type="date" class="form-control" value="" min="1800-01-01" style="width:170px" />
+                                        </div>
+                                        @*<button class="btn btn-default btn-sm btn-primary"><i class="fa fa-pencil"></i> Apply</button>*@
+                                   </div>
+                              </div>
+                              <div class="card sidebar-menu mb-4">
+                                   <div class="card-header">
+                                        <h3 class="h4 card-title">Giá <button class="btn btn-sm btn-danger pull-right" type="button" id="clear_price"><i class="fa fa-times-circle"></i> Clear</button></h3>
+                                   </div>
+                                   <div class="card-body pl-2">
+                                        <input type="hidden" id="lowprice" name="lowprice" value="0" />
+                                        <div class="form-inline">
+                                             <div class="form-group">
+                                                  <div style="color:black;cursor:pointer;width:55px" class="form-control">Từ </div><input type="number" class="form-control" value="" placeholder="0" min="0" style="width:170px" id="input_lowprice" />
+                                             </div>
+                                        </div>
+                                        <input type="hidden" id="highprice" name="highprice" value="0" />
+                                        <div class="form-inline">
+                                             <div class="form-group">
+                                                  <div style="color:black;cursor:pointer;width:55px" class="form-control">Đến</div><input type="number" class="form-control" value="" placeholder="0" min="0" style="width:170px" id="input_highprice" />
+                                             </div>
+                                        </div>
+                                        <div style="text-align:center" class="pt-3">
+                                             <span style="font-size:20px">
+                                                  <span class="badge badge-dark badge-lg" id="badge_lowprice">0</span>
+                                                  <span class="badge badge-dark">-</span>
+                                                  <span class="badge badge-dark" id="badge_highprice">0</span>
+                                             </span>
+                                        </div>
+                                   </div>
+                                   @*<button class="btn btn-default btn-sm btn-primary" id="apply"><i class="fa fa-pencil"></i> Apply </button>*@
+                              </div>
+                         }
+                         <!-- *** MENUS AND FILTERS END ***-->
+                         @*<div class="banner"><a href="#"><img src="img/banner.jpg" alt="sales 2014" class="img-fluid"></a></div>*@
+                    </div>
+                    <div class="col-lg-9">
+                         @*<div class="box">
+                                   <h1>All Book</h1>
+                              </div>*@
+                         <div id="here">
+                              <div class="box info-bar">
+                                   <div class="row">
+                                        <div class="col-md-12 col-lg-4 products-showing">Showing <strong id="numberItems">@showwing</strong> of <strong id="totalItems">@totalBooks</strong> products</div>
+                                        <div class="col-md-12 col-lg-7 products-number-sort">
+                                             <form class="form-inline d-block d-lg-flex justify-content-between flex-column flex-md-row">
+                                                  <div class="products-number">
+                                                       <strong>Show</strong>
+                                                       <a href="#" class="btn btn-sm btn-primary limitPerPage" data-limit="6" data-total="@totalBooks">06</a>
+                                                       <a href="#" class="btn btn-outline-secondary btn-sm limitPerPage" data-limit="12" data-total="@totalBooks">12</a>
+                                                       <a href="#" class="btn btn-outline-secondary btn-sm limitPerPage" data-limit="24" data-total="@totalBooks">24</a><span>products</span>
+                                                  </div>
+                                                  @*<div class="products-sort-by mt-2 mt-lg-0">
+                                                       <strong>Sort by</strong>
+                                                       <select name="sort-by" class="form-control">
+                                                            <option>Price</option>
+                                                            <option>Name</option>
+                                                            <option>Sales first</option>
+                                                       </select>
+                                                  </div>*@
+                                             </form>
+                                        </div>
+                                   </div>
+                              </div>
+                              <div class="products" id="jar">
+                                   <div class="row same-height-row">
+                                        @foreach (var b in Model)
+                                        {
+                                             Html.RenderAction("Card", "Book", b);
+                                        }
+                                   </div>
+                              </div>
+                              <div class="pages">
+                                   @*<p class="loadMore"><a href="#" class="btn btn-primary btn-lg"><i class="fa fa-chevron-down"></i> Load more</a></p>*@
+                                   <nav>
+                                        <ul class="pagination justify-content-center pagination-sm"></ul>
+                                   </nav>
+                              </div>
+                              <script>$(document).ready(pageList(6, "#jar ", ".box-product")).ready(limitPerPage("#jar ", ".box-product"));</script>
+                              <script>
+                                   $("#jar .row .mt-2").addClass("col-lg-4");
+                                   $(".bookCate").off('click').on('click', function (e) {
+                                        e.preventDefault();
+                                        var id = $(this).data('id');
+                                        $('.box-product').attr('style', 'display:none!important')
+                                        $(".box-product.bookCate-" + id).removeAttr('style');
+                                   })
+                                   addcartitem.init();
+                              </script>
+                         </div>
+                    </div>
+                    <!-- /.col-lg-9-->
+               </div>
+          </div>
+     </div>
+</div>

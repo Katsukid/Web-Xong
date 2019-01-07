@@ -1,0 +1,62 @@
+﻿@model BookMVC.Models.BookViewModel
+@{
+     var isNew =(bool)ViewBag.isNew;
+     var discount = (int)((Model.Price - Model.PromotionPrice) * 100 / Model.Price);
+}
+
+<div class="box-product bookCate-@Model.CategoryID col-lg-3 col-md-6 mt-2" >
+     <div class="product" style="height:490px">
+          <div class="box p-2 bg-light" style="height:490px">
+               <!-- Sale -->
+               @if (Model.Price.Value != Model.PromotionPrice.Value)
+               {
+                    <div class="ribbon sale">
+                         <div class="theribbon">-@discount%</div>
+                         <div class="ribbon-background"></div>
+                    </div>
+               }
+               <!-- New -->
+               @if (isNew)
+               {
+                    <div class="ribbon new">
+                         <div class="theribbon">NEW</div>
+                         <div class="ribbon-background"></div>
+                    </div>
+               }
+               <a href="@Url.Action("Detail", "Book", new { id = Model.ID})"><img src="@Model.Image" alt="Image @Model.Name 1" class="img-fluid border rounded" style="width:240px !important;height:300px"></a>
+               <hr class="m-1"/>
+               <div class="text m-1 p-0">
+                    <div style="height:70px">
+                         <p style="text-align:center;font-size:16px!important;height:37px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;" class="pb-0 mb-0" title="@Model.Name"><a>@Model.Name</a></p>
+                         <p style="text-align:center;font-size:13px!important" class="pb-0 mb-0"><a href="/BookBy/FilteredByAuthor?select_author=@Model.AuthorID"><b>@Model.Author</b></a></p>
+                         <p style="text-align:center;font-size:13px!important" class="pb-0 mb-0"><a href="/BookBy/FilteredByPublisher?select_publisher=@Model.PublisherID" class="text-black-50">NXB: <b>@Model.Publisher</b></a></p>
+                    </div>
+                    <hr />
+                    <div class="container-fluid" >
+                         @if (Model.Price.Value != Model.PromotionPrice.Value)
+                         {
+                              <div class="row">
+                                   <div class="col-8 old-price"> VND @(((Decimal)Model.Price).ToString("N0"))</div>
+                                   <div class="col"><a class="btn bg-transparent btn-add-cart p-0 m-0" href="@Url.Action("AddCartItem","Cart",new { @ItemID = Model.ID})" data-itemid="@Model.ID"><i class="fa fa-shopping-cart fa-lg text-info"></i></a></div>
+                              </div>
+                              <div class="row">
+                                   <div class="col-8 sale-price"> VND @(((Decimal)Model.PromotionPrice).ToString("N0"))</div>
+                                   @*<div class="col"><a class="btn bg-transparent p-0 m-0"><i class="fa fa-heart fa-lg" style="color:red"></i></a></div>*@
+                              </div>
+                              <div class="row text-secondary" style="font-size:12px">
+                                   <div class="col-8 text-secondary" >Lượt xem: @((Decimal)Model.ViewCount)</div>
+                                   <div class="col" >Kho: @((Decimal)Model.Inventory)</div>
+                              </div>
+                         }
+                         else
+                         {
+                              <div class="row">
+                                   <div class="col price">@(((Decimal)Model.PromotionPrice).ToString("N0"))</div>
+                              </div>
+                         }
+                    </div>
+               </div>
+          </div>
+     </div>
+     <!-- /.product-->
+</div>

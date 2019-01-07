@@ -1,0 +1,82 @@
+﻿@*@model List<BookMVC.Models.CartItemDetail>*@
+@model BookMVC.Models.IndexCartModel
+@{
+     ViewBag.Title = "Cart";
+     var tQuantity = (decimal)Model.totalQuantity;
+     var tPrice = (decimal)Model.totalPrice;
+     var tProtion = (decimal)Model.totalPromotion;
+     var realTotal = tPrice - tProtion;
+     int j = 1;
+     var listHot = Model.listHotBook;
+     var cart = Model.cart;
+}
+
+
+<script src="~/assets/Client/js/controller/cartController.js"></script>
+<div id="cart_content">
+     <div class="col-lg-12">
+          <nav aria-label="breadcrumb">
+               <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="@Url.Action("Index","Home")">Trang chủ</a></li>
+                    <li aria-current="page" class="breadcrumb-item active">Giỏ hàng</li>
+               </ol>
+          </nav>
+     </div>
+     <div class="container-fluid">
+          <div class="row">
+               <div class="col-lg-9">
+                    <div class="box" id="cart-content">
+                         <!-- Cart -->
+                         @{Html.RenderPartial("ContentCart", Model);}
+                         <!-- Cart end-->
+                    </div>
+                    <!-- List hot book-->
+                    <div class="box text-primary text-center font-weight-bold mb-0"> <h3 class="mb-0">Bán chạy nhất !!</h3></div>
+                    <div class="row same-height-row">
+                         @foreach (var b in listHot)
+                         {
+                              Html.RenderAction("Card", "Book", b);
+                         }
+                    </div>
+                    <hr />
+                    <!-- End List hot book-->
+               </div>
+               <div class="col-md-3">
+                    <div id="order-summary" class="card">
+                         <div class="card-header">
+                              <h3 class="mt-4 mb-4">Đơn hàng dự kiến</h3>
+                         </div>
+                         <div class="card-body">
+                              <p class="text-muted">Giá trị đơn hàng chưa kể phí vận chuyển</p>
+                              <div class="table-responsive">
+                                   <table class="table">
+                                        <tbody>
+                                             <tr>
+                                                  <td>Tổng giá trị sản phẩm đã chọn</td>
+                                                  <th><span id="tPrice">@tPrice.ToString("N0")</span> VNĐ</th>
+                                             </tr>
+                                             <tr>
+                                                  <td>Tổng khuyến mãi</td>
+                                                  <th><span id="tPromotion">@tProtion.ToString("N0")</span> VNĐ</th>
+                                             </tr>
+                                             <tr>
+                                                  <td>Thành tiền</td>
+                                                  <th><span id="realPrice">@realTotal.ToString("N0")</span> VNĐ</th>
+                                             </tr>
+                                             @*<tr class="total">
+                                                  <td>Total</td>
+                                                  <th>$456.00</th>
+                                             </tr>*@
+                                        </tbody>
+                                   </table>
+                              </div>
+                         </div>
+                    </div>
+               </div>
+          </div>
+     </div>
+     <script>
+          addcartitemincart.init();
+          updateSelectedItems.init();
+     </script>
+</div>

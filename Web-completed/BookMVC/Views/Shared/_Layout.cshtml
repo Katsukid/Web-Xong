@@ -1,0 +1,58 @@
+﻿<!DOCTYPE html>
+<html>
+      @RenderPage("~/Views/Shared/Head.cshtml")
+<body >
+     <!-- navbar-->
+     <header class="header mb-5">
+          <!--
+     *** TOPBAR ***
+     _________________________________________________________
+     -->
+          <div id="top">
+               <div class="container">
+                    <div class="row">
+                         <div class="col-lg-6 offer mb-3 mb-lg-0" id="hello">Xin chào @Session["UserName"]</div>
+                         <div class="col-lg-6 text-center text-lg-right">
+                              <ul class="menu list-inline mb-0">
+                                   @if (Session["UserName"] == null)
+                                   {
+                                        <li class="list-inline-item" id="login"><a href="#" data-modal="login-modal" class="show-modal">Đăng nhập</a></li>
+                                        <li class="list-inline-item" id="logout" style="display:none">@Html.ActionLink("Đăng xuất", "Logout", "User", null, null)</li>
+                                        <li class="list-inline-item" id="register">@Html.ActionLink("Đăng ký tài khoản", "Register", "User", null, null)</li>
+                                        <li class="list-inline-item" id="userprofile" style="display:none">@Html.ActionLink("Thông tin tài khoản", "UserProfile", "Account", null, null)</li>
+                                   }
+                                   else
+                                   {
+                                        <li class="list-inline-item" id="logout">@Html.ActionLink("Đăng xuất", "Logout", "User", null, null)</li>
+                                        <li class="list-inline-item" id="userprofile">@Html.ActionLink("Thông tin tài khoản", "UserProfile", "Account", null, null)</li>
+                                   }
+
+                                   @*<li class="list-inline-item">@Html.ActionLink("Contact", "Contact", "Home", null, null)</li>
+          <li class="list-inline-item">@Html.ActionLink("Recently viewed", "Recently-viewed", "Home", null, null)</li>*@
+                              </ul>
+                         </div>
+                    </div>
+               </div>
+               @{Html.RenderAction("LoginModal", "User");}
+               <!-- *** TOP BAR END ***-->
+
+
+          </div>
+          <!-- Link co icon-->
+
+
+          @{ Html.RenderAction("TopNavBar", "Home");}
+          @RenderPage("~/Views/Shared/SearchBtn.cshtml")
+     </header>
+     <div class="container-fluid">
+          @RenderSection("leftnavbar", required: false)
+          @RenderBody()
+          @RenderSection("rightnavbar", required: false)
+          <hr />
+     </div>
+
+     @RenderPage("~/Views/Shared/Footer.cshtml")
+     @RenderSection("jsFooter", required: false)
+     <script src="~/assets/Client/js/controller/userController.js"></script>
+</body>
+</html>

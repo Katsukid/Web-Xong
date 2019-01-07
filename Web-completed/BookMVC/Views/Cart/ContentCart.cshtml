@@ -1,0 +1,128 @@
+﻿@model BookMVC.Models.IndexCartModel
+@{
+     ViewBag.Title = "Cart";
+     var tQuantity = (decimal)Model.totalQuantity;
+     var tPrice = (decimal)Model.totalPrice;
+     int j = 1;
+     var listHot = Model.listHotBook;
+     var cart = Model.cart;
+}
+
+@using (Html.BeginForm("UpdateCartAll", "Cart", FormMethod.Post, new { @id = "form_cart" })) // Bam 1 lan update tat ca
+{
+     @Html.AntiForgeryToken()
+     <h1> Giỏ hàng của @Session["UserName"]</h1>
+     <p class="text-muted">Bạn có <span id="tQuantity">@tQuantity</span> sản phẩm trong giỏ của mình!</p>
+     <div class="table-responsive">
+          <table class="table table-striped table-bordered" style="text-align:center;" id="cart">
+               <thead>
+                    <tr>
+                         <th scope="col">#</th>
+                         <th scope="col" style="width:100px;">Sản phẩm</th>
+                         <th scope="col">Tên sản phẩm</th>
+                         <th scope="col" style="width:70px;padding:4px">Số lượng</th>
+                         <th scope="col" style="width:85px">Đơn giá</th>
+                         <th scope="col" style="width:55px">Khuyến mãi</th>
+                         <th scope="col" style="width:85px">Tổng tiền</th>
+                         <th>@Html.DisplayNameFor(x => cart[0].Selected)</th>
+                         <th style="width:20px;padding:2px">Xóa</th>
+                    </tr>
+               </thead>
+               <tbody>
+                    @foreach (var i in cart)
+                    {
+
+                         <tr class="cart-item">
+                              <th scope="row">@(j++)</th>
+                              <td style="width:100px;">
+                                   <a href="@Url.Action("Detail","Book",new { id = i.ItemID })"><img src="@i.Image" alt="@i.Name" style="width:80px;height:120px"></a>
+                              </td>
+                              <td>
+                                   <h4><a href="@Url.Action("Detail","Book",new { id = i.ItemID })">@i.Name</a></h4>
+                              </td>
+                              <td style="padding:4px">
+                                   <input class="form-control text-box single-line quantity" data-id="@i.ItemID" data-val="true" data-val-number="The field Quantity must be a number." id="Quantity+@i.ItemID" min="1" name="Quantity+@i.ItemID" style="width:70px" type="number" value="@i.Quantity">
+                              </td>
+                              <td>@(i.Price.GetValueOrDefault(0).ToString("N0")) VNĐ</td>
+                              <td>@(((i.PromotionPrice - i.Price) * 100 / i.Price).GetValueOrDefault(0).ToString("N2")) %</td>
+                              <td>@(((Decimal)(i.PromotionPrice.GetValueOrDefault(0) * i.Quantity)).ToString("N0")) VNĐ</td>
+                              <td id="selectItem_@i.ItemID">
+                                   @if (i.Selected == true)
+                                   {
+                                        <input class="checkbox" id="Selected+@i.ItemID" name="Selected+@i.ItemID" type="checkbox" checked="checked" data-id="@i.ItemID" />
+                                   }
+                                   else
+                                   {
+                                        <input class="checkbox" id="Selected+@i.ItemID" name="Selected+@i.ItemID" type="checkbox" data-id="@i.ItemID" />
+                                   }
+                              </td>
+                              <td style="padding:4px">
+                                   <button class="btn btn-outline-danger show-modal" data-modal="delete_modal_@i.ItemID"><i class="fa fa-trash-o fa-sm"></i></button>
+                              </td>
+                         </tr>
+                    }
+               </tbody>
+               <tfoot>
+                    @*<tr>
+                              <th colspan="4">Total</th>
+                              <th colspan="3"></th>
+                              <th colspan="3" style="text-align:right"><span id="shipping_total">@(tPrice.ToString("N0"))</span> VNĐ</th>
+                              <th></th>
+                         </tr>*@
+               </tfoot>
+          </table>
+     </div>
+     foreach (var i in cart)
+     {
+          <div id="delete_modal_@i.ItemID" tabindex="-1" role="dialog" aria-labelledby="Login" aria-hidden="true" class="modal fade">
+               <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                         <div class="modal-header">
+                              <h5 class="modal-title">Bạn có muốn xóa <span class="text-danger">@i.Name</span> khỏi giỏ hàng?</h5>
+                         </div>
+                         <div class="modal-footer">
+                              <button class="btn btn-outline-danger close-modal btn-delete" data-modal="delete_modal_@i.ItemID" data-id="@i.ItemID"><i class="fa fa-trash-o fa-sm"> Xóa</i></button>
+                              <button class="btn btn-outline-success close-modal" data-modal="delete_modal_@i.ItemID"><i class="fa fa-times-circle-o fa-sm"> Hủy</i></button>
+                         </div>
+                    </div>
+               </div>
+          </div>
+     }
+     <div class="box-footer d-flex justify-content-between flex-column flex-lg-row">
+          <div class="left"><a href="@Url.Action("Index","Home")" class="btn btn-outline-secondary"><i class="fa fa-chevron-left"></i> Tiếp tục mua sắm</a></div>
+          <div class="right">
+               @*<button type="submit" class="btn btn-primary" id="btn_update_item"><i class="fa fa-refresh"></i> Update Cart</button>*@
+               @*<a href="@Url.Action("CheckOut","Order")" class="btn btn-outline-secondary">Proceed to checkout <i class="fa fa-chevron-right"></i></a>*@
+               <button type="submit" formaction="@Url.Action("OrderDetail","Order")" class="btn btn-outline-secondary" id="btn-payment">Tiến hành thanh toán<i class="fa fa-chevron-right"></i></button>
+          </div>
+     </div>
+}
+<script src="~/assets/Client/js/controller/payment.js"></script>
+<script>
+     updatecartitemincart.init();
+     deletecartitemincart.init();
+
+     updateSelectedItems.init();
+     payment.init();
+</script>
+<script>
+     $(document).ready(function () {
+          $('#cart').DataTable({
+               "bSort": false,
+               "language": {
+                    "lengthMenu": "Hiển thị _MENU_ sản phẩm mỗi trang",
+                    "search": "Tìm kiếm:",
+                    "paginate": {
+                         "previous": "Trước",
+                         "next": "Sau"
+                    }
+               },
+               "aLengthMenu": [[5, 10, 100, -1], [5, 10, 100, "All"]],
+               "iDisplayLength": 5,
+               "fnInfoCallback": function (oSettings, iStart, iEnd, iMax, iTotal, sPre) {
+                    return iStart + " to " + iEnd;
+               }
+          });
+     });
+</script>
+

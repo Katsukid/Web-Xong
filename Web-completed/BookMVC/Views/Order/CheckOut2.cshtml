@@ -1,0 +1,137 @@
+﻿@model List<BookMVC.Entities.ShippingType>
+@{
+     ViewBag.Title = "CheckOut2";
+     Layout = "~/Views/Shared/_Layout.cshtml";
+     long choised = 0;
+     decimal shippingCost = 0;
+     if(ViewBag.ShipTypeChoised != null)
+     {
+          choised = (long)ViewBag.ShipTypeChoised;
+          shippingCost = (decimal)ViewBag.shippingCost;
+     }
+     var tPrice = (decimal)ViewBag.totalPrice;
+     var tQuantity = (int)ViewBag.totalQuantity;
+     var tProtion = (decimal)ViewBag.totalPromotion;
+     var Total = tPrice - tProtion;
+     var realTotal = Total + shippingCost;
+}
+
+<div id="all">
+     <div id="content">
+          <div class="container-fluid">
+               <div class="row">
+                    <div class="col-lg-12">
+                         <!-- breadcrumb-->
+                         <nav aria-label="breadcrumb">
+                              <ol class="breadcrumb">
+                                   <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
+                                   <li aria-current="page" class="breadcrumb-item active">Kiểm tra - Hình thức vận chuyển</li>
+                              </ol>
+                         </nav>
+                    </div>
+                    <div id="checkout" class="col-lg-9">
+                         <div class="box">
+                              @using (Html.BeginForm("Checkout2", "Order", FormMethod.Post))
+                              {
+                                   @Html.AntiForgeryToken()
+                                   <h1>Kiểm tra - Hình thức vận chuyển</h1>
+                                   <div class="nav flex-column flex-md-row nav-pills text-center">
+                                        <a href="@Url.Action("CheckOut","Order")" class="nav-link flex-sm-fill text-sm-center"><i class="fa fa-map-marker"></i>Thông tin người nhận</a>
+                                        <a href="#" class="nav-link flex-sm-fill text-sm-center active"><i class="fa fa-truck"></i>Phương thức vận chuyển</a>
+                                        <a href="#" class="nav-link flex-sm-fill text-sm-center disabled"><i class="fa fa-money"></i>Phương thức thanh toán</a>
+                                        <a href="#" class="nav-link flex-sm-fill text-sm-center disabled"><i class="fa fa-eye"></i>Đơn hàng của tôi</a>
+                                   </div>
+                                   <div class="content py-3">
+                                        <div class="row">
+                                             @foreach (var t in Model)
+                                             {
+                                                  <div class="col-md-6">
+                                                       <div class="box shipping-method">
+                                                            <h4 style="text-align:center" class="pb-3">@t.TypeShip</h4>
+                                                            <p>Nhận hàng trong khoảng từ @t.Time</p>
+                                                            <p>Giá chỉ: @t.Cost.ToString("N0") VNĐ</p>
+                                                            <div class="box-footer text-center p-0">
+                                                                 @if (@choised == t.ID)
+                                                                 {
+                                                                      <input type="radio" id="shippingType" name="shippingType" class="shippingType" value="@t.ID" checked="checked">
+                                                                 }
+                                                                 else
+                                                                 {
+                                                                      <input type="radio" id="shippingType" name="shippingType" class="shippingType" value="@t.ID">
+                                                                 }
+                                                            </div>
+                                                       </div>
+                                                  </div>
+                                             }
+                                        </div>
+                                   </div>
+                                   <div class="box-footer d-flex justify-content-between">
+                                        <a href="@Url.Action("CheckOut","Order")" class="btn btn-outline-secondary"><i class="fa fa-chevron-left"></i>Trở về thông tin người nhận</a>
+                                        <a href="@Url.Action("Index","Cart")" class="btn btn-outline-info">Trở về giỏ hàng</a>
+                                        <button type="submit" class="btn btn-primary">Sang hình thức thanh toán<i class="fa fa-chevron-right"></i></button>
+                                   </div>
+                              }
+
+                         </div>
+                         <!-- /.box-->
+                    </div>
+                    <!-- /.col-md-9-->
+                    <div class="col-md-3">
+                         <div id="order-summary" class="card">
+                              <div class="card-header">
+                                   <h3 class="mt-4 mb-4">Đơn hàng dự kiến</h3>
+                              </div>
+                              <div class="card-body">
+                                   <div class="table-responsive">
+                                        <table class="table">
+                                             <tbody>
+                                                  <tr>
+                                                       <td>Số sản phẩm</td>
+                                                       <th style="text-align:center"><span id="tQuantity">@tQuantity sản phẩm</span></th>
+                                                  </tr>
+                                                  <tr>
+                                                       <td>Giá trị đơn hàng</td>
+                                                       <th style="text-align:right"><span id="tPrice">@tPrice.ToString("N0")</span> VNĐ</th>
+                                                  </tr>
+                                                  <tr>
+                                                       <td>Tổng khuyến mãi</td>
+                                                       <th style="text-align:right"><span id="tPromotion">@tProtion.ToString("N0")</span> VNĐ</th>
+                                                  </tr>
+                                                  <tr>
+                                                       <td>Sau khuyến mãi</td>
+                                                       <th style="text-align:right"><span id="Total">@Total.ToString("N0")</span> VNĐ</th>
+                                                  </tr>
+                                                  <tr>
+                                                       <td>Phí vận chuyển</td>
+                                                       <th style="text-align:right"><span id="shippingCost">@shippingCost.ToString("N0")</span> VNĐ</th>
+                                                  </tr>
+                                                  <tr class="total">
+                                                       <th>Thành tiền</th>
+                                                       <td style="text-align:right"><span id="realPrice">@realTotal.ToString("N0")</span> VNĐ</td>
+                                                  </tr>
+                                             </tbody>
+                                        </table>
+                                   </div>
+                              </div>
+                         </div>
+                    </div>
+                    <!-- /.col-md-3-->
+               </div>
+          </div>
+     </div>
+</div>
+<script>
+     $(".shippingType").on('click', function () {
+          var shippingTypeID = parseInt($(this).val());
+          $.ajax({
+               method: 'POST',
+               url: '/Order/CheckOut2Demo',
+               data: { shippingType: shippingTypeID },
+               dataType: 'json',
+               success: function (res) {
+                    $("#shippingCost").text(res.shippingCost);
+                    $("#realPrice").text(res.realPrice);
+               }
+          });
+     });
+</script>

@@ -1,0 +1,21 @@
+﻿@model List<BookMVC.Models.SearchViewModel>
+
+
+<ul class="autocomplete-items">
+     @foreach (var i in Model)
+     {
+          <li class="autocomplete-item" value="@i.id" data-type="@i.type">@i.KeyWord</li>
+     }
+</ul>
+<script>
+     $("ul.autocomplete-items li").off("click").on("click", function () {
+          var selected = $(this);
+          var text = selected.text();
+          var id = selected.val();
+          var type = selected.data("type");
+          $("#search_box").val(text);
+          $("#search_box").attr("data-id", id);
+          $("#search_box").attr("data-type", type);
+          $("#listAutoComplete").html("");
+     });
+</script>

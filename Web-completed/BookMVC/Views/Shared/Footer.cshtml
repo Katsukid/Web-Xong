@@ -1,0 +1,55 @@
+﻿<!--
+    *** FOOTER ***
+    _________________________________________________________
+    -->
+<div id="footer">
+     <div class="container">
+          <div class="row">
+               <div class="col-6">
+                    <p>Hãy nhanh tay mua cho mình những cuốn sách đổi đời ngay hôm nay !</p>
+               </div>
+               <div class="col-6">
+                    @if (Session["UserID"] == null)
+                    {
+                         <p>Hãy <a href="@Url.Action("Register","User")">đăng ký</a> ngay hôm nay để có thể mua hàng mọi lúc mọi nơi !</p>
+                    }
+                    else
+                    {
+                         <p>Hãy <a href="@Url.Action("","BookBy")">tìm kiếm</a> cuốn sách của bạn ngay hôm nay để có những trải nghiệm mới !</p>
+                    }
+               </div>
+          </div>
+          <!-- /.row-->
+     </div>
+     <!-- /.container-->
+</div>
+<!-- /#footer-->
+<!-- *** FOOTER END ***-->
+<!--
+    *** COPYRIGHT ***
+    _________________________________________________________
+    -->
+<div id="copyright">
+     <div class="container">
+          <div class="row">
+               <div class="col-lg-6 mb-2 mb-lg-0">
+                    <p class="text-center text-lg-left">©2018 Book Store Online</p>
+               </div>
+               <div class="col-lg-6">
+                    <p class="text-center text-lg-right">
+                         Template design by <a href="https://bootstrapious.com/e-commerce-templates">Bootstrapious: E-commerce</a>
+                         <!-- Not removing these links is part of the licence conditions of the template. Thanks for understanding :)-->
+                    </p>
+               </div>
+          </div>
+     </div>
+</div>
+<!-- *** COPYRIGHT END ***-->
+<!-- JavaScript files-->
+
+<script src="~/assets/Client/vendor/popper.js/umd/popper.min.js"></script>
+<script src="~/assets/Client/vendor/bootstrap/js/bootstrap.min.js"></script>
+<script src="~/assets/Client/vendor/owl.carousel/owl.carousel.min.js"></script>
+<script src="~/assets/Client/vendor/owl.carousel2.thumbs/owl.carousel2.thumbs.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js"></script>
+<script src="~/assets/Client/js/front.js"></script>

@@ -1,0 +1,18 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Web;
+using System.Web.Mvc;
+using BookMVC.Entities;
+namespace BookMVC.Models
+{
+     public class BookViewModel
+     {
+          public Book Book { get; set; }
+          public string Author { get; set; }
+          public string Released { get; set; }
+          public string Publisher { get; set; }
+     }
+}

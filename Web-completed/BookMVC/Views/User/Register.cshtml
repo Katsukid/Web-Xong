@@ -1,0 +1,108 @@
+﻿@model BookMVC.Entities.User
+@{
+     ViewBag.Title = "Register";
+     Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!-- navbar-->
+<div id="all">
+     <div id="content">
+          <div class="container">
+               <h4 class="textcenter text-primary">Register</h4>
+               @using (Html.BeginForm("Register", "User", FormMethod.Post, new { @onsubmit="return checkall();"}))
+               {
+                    @Html.AntiForgeryToken()
+                    <div class="form-group">
+                         <div class="row pb-1" style="height:65px">
+                              <div class="col-lg-6">
+                                   <div class="input-group">
+                                        <span class="btn btn-primary noneradius-right"><i class="fa fa-user-circle icon" aria-hidden="true"></i></span>
+                                        @*@Html.TextBoxFor(u => u.Name,new { @class = "form-control", onkeyup = "check('Name')", placeholder="Enter you name"})*@
+                                        <input type="text" class="form-control" name="Name" id="Name" placeholder="Enter your Name" />
+                                     
+                                        
+                                   </div>
+                                   <div class="text-danger" id="er_Name">@Html.ValidationMessageFor(x => Model.Name)</div>
+                              </div>
+                              <div class="col-lg-6">
+                                   <div class="input-group">
+                                        <span class="btn btn-primary noneradius-right"><i class="fa fa-user icon" aria-hidden="true"></i></span>
+                                        <input type="text" class="form-control" name="UserName" id="UserName" placeholder="Enter your UserName" onkeyup="check('UserName)" />
+                                        
+                                   </div>
+                                   <div class="text-danger" id="er_Email">@Html.ValidationMessageFor(x => Model.UserName)</div>
+                              </div>
+                         </div>
+                         <div class="row pb-1" style="height:65px">
+                              <div class="col-lg-6">
+                                   <div class="input-group">
+                                        <span class="btn btn-primary noneradius-right"><i class="fa fa-home icon" aria-hidden="true"></i></span>
+                                        <input type="text" class="form-control" name="Address" id="Address" placeholder="Enter your address" value="" />
+                                        
+                                        @*@Html.TextBoxFor(u => u.Email, new { @class="form-control", onkeyup = "check('Email')", placeholder="Enter your email"})*@
+                                   </div>
+                                   <div class="text-danger" id="er_Address">@Html.ValidationMessageFor(x => Model.Address)</div>
+                              </div>
+                              <div class="col-lg-6">
+                                   <div class="input-group">
+                                        <span class="btn btn-primary noneradius-right"><i class="fa fa-envelope-o icon" aria-hidden="true"></i></span>
+                                        <input type="text" class="form-control" name="Email" id="Email" placeholder="Enter your Email" value="" />
+                                        
+                                   </div>
+                                   <div class="text-danger" id="er_Email">@Html.ValidationMessageFor(x => Model.Email)</div>
+                              </div>
+                         </div>
+                         <div class="row pb-1" style="height:65px">
+                              <div class="col-lg-6" >
+                                   <div class="input-group">
+                                        <span class="btn btn-primary noneradius-right"><i class="fa fa-phone icon" aria-hidden="true"></i></span>
+                                        <input type="tel" class="form-control" name="Phone" id="Phone" placeholder="Enter your Phome number" />
+                                        
+                                   </div>
+                                   <div class="text-danger" id="er_Phone"> @Html.ValidationMessageFor(x => Model.Phone)</div>
+                              </div>
+                              <div class="col-lg-6">
+                                   <div class="input-group">
+                                        <span class="btn btn-primary noneradius-right"><i class="fa fa-lock icon" aria-hidden="true"></i></span>
+                                        <input type="password" class="form-control" name="password" id="password" placeholder="Enter your Password" />
+                                        <br/>
+                                        
+                                   </div>
+                                   <div class="text-danger" id="er_cpassword"> @Html.ValidationMessageFor(x => Model.Password)</div>
+                              </div>
+                         </div>
+                         <div class="row pb-1" style="height:65px">
+                              <div class="col-lg-6">
+                                   <div class="input-group">
+                                        <span class="btn btn-primary noneradius-right"><i class="fa fa-birthday-cake icon" aria-hidden="true"></i></span>
+                                        <input type="date" class="form-control" name="DayOfBirth" id="DayOfBirth" min="1900-01-01" max="2010-01-01" />
+                                        <br />
+                                   </div>
+                                   <div class="text-danger" id="er_DayOfBirth"> @Html.ValidationMessageFor(x => Model.DayOfBirth)</div>
+                              </div>
+                              <div class="col-lg-6">
+                                   <div class="input-group">
+                                        @*<span class="btn btn-primary noneradius-right"><i class="fa fa-lock icon" aria-hidden="true"></i></span>
+                                        <input type="password" onkeyup="check('cpassword')" class="form-control" name="cpassword" id="cpassword" placeholder="Confirm your Password" />*@
+                                        @*<input type="checkbox" />*@
+                                        @*<span> Nhận thông tin khuyến mãi qua Email cá nhân </span>*@
+                                   </div>
+                              </div>
+                         </div>
+                         <div class="row pb-1">
+                              <div class="col-lg-7">
+                              </div>
+                              <div class="col-lg-4">
+                                   <button type="submit" class="btn btn-primary">Submit</button>
+                                   <button type="reset" class="btn btn-primary">Reset</button>
+                                   <button type="button" class="btn btn-primary"> Cancel</button>
+                              </div>
+                              <div class="col-lg-1">
+
+                              </div>
+                         </div>
+                    </div>
+               }
+          </div>
+     </div>
+</div>

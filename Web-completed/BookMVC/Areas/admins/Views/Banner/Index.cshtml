@@ -1,0 +1,95 @@
+﻿@model PagedList.IPagedList<BookMVC.Areas.admins.Models.SlideModel>
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Areas/admins/Views/Shared/_Layouts.cshtml";
+    var i = 0;
+}
+
+@section jsFooter{
+  
+<script src="~/assets/admin/js/Controller/BannerController.js"></script>
+<script src="~/assets/admin/js/Controller/SearchBannerController.js"></script>
+}
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="btn-add">
+                <a href="/admins/Banner/Create" class="btn btn-primary"><i class="glyphicon glyphicon-user"></i>Thêm banner</a>
+            </div>
+            <div class="panel-heading">
+                Quản lý banner
+            </div>
+            <!-- /.panel-heading -->
+            <div class="panel-body">
+                @using (Html.BeginForm("Index", "Banner", FormMethod.Get))
+                {
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="col-md-4">
+                                <input type="text" value="@ViewBag.SearchString" class="form-control" name="searchString" id="txtKeyword" />
+                            </div>
+                            <div class="col-md-4">
+                                <button type="submit" class="btn btn-success">Tìm kiếm</button>
+                            </div>
+                        </div>
+                    </div>
+
+                }
+                <br />
+
+                <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+                    <thead>
+                        <tr>
+                            <th style="text-align:center; width:50px;">STT</th>
+                            <th style="text-align:center; width:250px;">Tên sách</th>
+                            <th style="text-align:center; width:300px;">Hình ảnh</th>
+                            <th style="text-align:center; width:300px;">Vị trí</th>
+                            <th style="text-align:center; width:300px;">Thứ tự</th>
+                            <th style="text-align:center; width:80px;">Trạng thái</th>
+                            <th style="text-align:center; width:80px;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            i++;
+                            <tr class="odd gradeX">
+                                <td style="text-align:center;">@i</td>
+                                <td style="text-align:center">@item.NameBook </td>
+                                <td><img src="@item.slide.Image" style="height:98px; width:300px; text-align:center;" /></td>
+                                <td style="text-align:center">@item.slide.Where </td>
+                                <td style="text-align:center">@item.slide.DisplayOrder </td>
+                                <td style="text-align:center"><a class="btn-active" data-id="@item.slide.ID">@((bool)item.slide.Status ? "Kích hoạt" : "Khóa")</a></td>
+                                <td class="btn btn-warning" title="Sửa thông tin banner">
+                                    <a href="/admins/Banner/Edit/@item.slide.ID">
+                                        <i class="glyphicon glyphicon-edit" style="padding:4px; color:#ffffff;"></i>
+                                    </a>
+                                </td>
+
+                                <td class="btn btn-danger" title="Xoá slide này">
+                                    <a class="btn-deleteBanner" data-id="@item.slide.ID">
+                                        <i class="glyphicon glyphicon-remove" style="padding:4px; color:#ffffff;"></i>
+                                    </a>
+                                </td>
+
+                            </tr>
+                        }
+
+                    </tbody>
+                </table>
+                @Html.PagedListPager(Model, Page => Url.Action("Index", new { Page }))
+                <!-- /.table-responsive -->
+
+            </div>
+            <!-- /.panel-body -->
+        </div>
+        <!-- /.panel -->
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+
+
+

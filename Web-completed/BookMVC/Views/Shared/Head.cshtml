@@ -1,0 +1,47 @@
+﻿
+<head>
+     <meta charset="utf-8">
+     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+     <title>@ViewBag.Title</title>
+     <meta name="description" content="">
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+     <meta name="robots" content="all,follow">
+     <!-- Bootstrap CSS-->
+     @*<link rel="stylesheet" href="~/assets/Client/vendor/bootstrap/css/bootstrap.min.css">*@
+     <link href="~/assets/Client/vendor/bootstrap/css/bootstrap.css" rel="stylesheet" />
+     <!-- Font Awesome CSS-->
+     <link rel="stylesheet" href="~/assets/Client/vendor/font-awesome/css/font-awesome.min.css">
+     <!-- Google fonts - Roboto -->
+     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,500,700,300,100">
+     <!-- owl carousel-->
+     <link rel="stylesheet" href="~/assets/Client/vendor/owl.carousel/assets/owl.carousel.css">
+     <link rel="stylesheet" href="~/assets/Client/vendor/owl.carousel/assets/owl.theme.default.css">
+     <!-- theme stylesheet-->
+     <link rel="stylesheet" href="~/assets/Client/css/style.default.css" id="theme-stylesheet">
+     <!-- Custom stylesheet - for your changes-->
+     <link rel="stylesheet" href="~/assets/Client/css/custom.css">
+     <!-- Favicon-->
+     <link rel="shortcut icon" href="~/assets/Client/favicon.png">
+     <!-- Tweaks for older IEs-->
+     <!--[if lt IE 9]>
+     <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
+     <!-- DataTable-->
+     <link href="~/assets/Client/css/dataTables.bootstrap4.min.css" rel="stylesheet" />
+     <script src="~/assets/Client/vendor/jquery/jquery.min.js"></script>
+     <script src="~/assets/Client/vendor/jquery.cookie/jquery.cookie.js"></script>
+     <script src="~/assets/Client/js/dataTable/jquery.dataTables.min.js"></script>
+     <script src="~/assets/Client/js/dataTable/dataTables.bootstrap4.min.js">
+     </script>
+
+     <script src="~/assets/Client/js/controller/pagedList.js"></script>
+     @{
+          if (TempData["message"] != null)
+          {
+               <script type="text/javascript">
+               alert(@Html.Raw(Json.Encode(TempData["message"])));
+               </script>
+          }
+     }
+
+</head>

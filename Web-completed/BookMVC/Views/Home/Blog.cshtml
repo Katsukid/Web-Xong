@@ -1,0 +1,33 @@
+﻿@model List<BookMVC.Models.NewsViewModels>
+
+<div class="container">
+     <div class="box text-center">
+          <div class="container">
+               <div class="col-md-12">
+                    <h3 class="text-uppercase">From our blog</h3>
+                    <p class="lead mb-0">What's new in the world of book? <a href="#">Check our blog!</a></p>
+               </div>
+          </div>
+     </div>
+     <div class="container">
+          <div class="col-md-12">
+               <div id="blog-homepage" class="row">
+                    @foreach (var blog in Model)
+                    {
+                         <div class="col-sm-6">
+                              <div class="post">
+                                   <h4><a href="@Url.Action("BlogDetail","Home",new { id = blog.ID})">@blog.Title</a></h4>
+                                   <p class="author-category">
+                                        By @blog.Author in @blog.NameType
+                                   </p>
+                                   <hr>
+                                   <p class="intro" style="text-align:justify">@Html.Raw(@blog.Content)</p>
+                                   <p class="read-more"><a href="@Url.Action("BlogDetail","Home",new { id = blog.ID})" class="btn btn-primary">Continue reading</a></p>
+                              </div>
+                         </div>
+                    }
+               </div>
+               <!-- /#blog-homepage-->
+          </div>
+     </div>
+</div>

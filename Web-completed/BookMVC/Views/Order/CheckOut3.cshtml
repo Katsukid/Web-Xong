@@ -1,0 +1,115 @@
+﻿@model BookMVC.Entities.Order_Detail
+@{ 
+     ViewBag.Title = "Kiểm tra - Hình thức thanh toán";
+     Layout = "~/Views/Shared/_Layout.cshtml";
+     decimal shippingCost = (decimal)ViewBag.shippingCost;
+     var tPrice = (decimal)ViewBag.totalPrice;
+     var tQuantity = (int)ViewBag.totalQuantity;
+     var tProtion = (decimal)ViewBag.totalPromotion;
+     var Total = tPrice - tProtion;
+     var realTotal = Total + shippingCost;
+}
+
+<div id="all">
+     <div id="content">
+          <div class="container-fluid">
+               <div class="row">
+                    <div class="col-lg-12">
+                         <!-- breadcrumb-->
+                         <nav aria-label="breadcrumb">
+                              <ol class="breadcrumb">
+                                   <li class="breadcrumb-item"><a href="#">Trang chủ</a></li>
+                                   <li aria-current="page" class="breadcrumb-item active">Kiểm tra - Hình thức thanh toán</li>
+                              </ol>
+                         </nav>
+                    </div>
+                    <div id="checkout" class="col-lg-9">
+                         <div class="box">
+                              @using (Html.BeginForm("CheckOut3", "Order", FormMethod.Post))
+                              {
+                                   @Html.AntiForgeryToken()
+                                   <h1>Kiểm tra - Hình thức thanh toán</h1>
+                                   <div class="nav flex-column flex-sm-row nav-pills">
+                                        <a href="@Url.Action("CheckOut","Order")" class="nav-link flex-sm-fill text-sm-center">
+                                             <i class="fa fa-map-marker"></i>Thông tin người nhận
+                                        </a>
+                                        <a href="@Url.Action("CheckOut2","Order")" class="nav-link flex-sm-fill text-sm-center">
+                                             <i class="fa fa-truck"></i>Hình thức vận chuyển
+                                        </a>
+                                        <a href="@Url.Action("CheckOut3","Order")" class="nav-link flex-sm-fill text-sm-center active">
+                                             <i class="fa fa-money"></i>Hình thức thanh toán
+                                        </a>
+                                        <a href="#" class="nav-link flex-sm-fill text-sm-center disabled">
+                                             <i class="fa fa-eye"></i>Đơn hàng của tôi
+                                        </a>
+                                   </div>
+                                   <div class="content py-3">
+                                        <div class="row">
+                                             <div class="col-md-6">
+                                                  <div class="box payment-method" style="text-align:center">
+                                                       <h4 class="pb-3">Thanh toán khi nhận hàng</h4>
+                                                       <p>Hiện tại chúng tôi chỉ cung cấp dịch vụ này</p>
+                                                       <div class="box-footer text-center p-0">
+                                                            <input type="radio" id="shippingType" name="paymentType" value="1" checked>
+                                                       </div>
+                                                  </div>
+                                             </div>
+                                        </div>
+                                        <!-- /.row-->
+                                   </div>
+                                   <!-- /.content-->
+                                   <div class="box-footer d-flex justify-content-between">
+                                        <a href="@Url.Action("CheckOut2","Order")" class="btn btn-outline-secondary"><i class="fa fa-chevron-left"></i>Trở lại Hình thức vận chuyển</a>
+                                        <a href="@Url.Action("Index","Cart")" class="btn btn-outline-info">Trở về giỏ hàng</a>
+                                        <button type="submit" class="btn btn-primary">Xem đơn hàng của tôi<i class="fa fa-chevron-right"></i></button>
+                                   </div>
+                              }
+                              <!-- /.box-->
+                         </div>
+                    </div>
+                    <!-- /.col-lg-9-->
+                    <div class="col-md-3">
+                         <div id="order-summary" class="card">
+                              <div class="card-header">
+                                   <h3 class="mt-4 mb-4">Đơn hàng dự kiến</h3>
+                              </div>
+                              <div class="card-body">
+                                   <div class="table-responsive">
+                                        <table class="table">
+                                             <tbody>
+                                                  <tr>
+                                                       <td>Số sản phẩm</td>
+                                                       <th style="text-align:center"><span id="tQuantity">@tQuantity sản phẩm</span></th>
+                                                  </tr>
+                                                  <tr>
+                                                       <td>Giá trị đơn hàng</td>
+                                                       <th style="text-align:right"><span id="tPrice">@tPrice.ToString("N0")</span> VNĐ</th>
+                                                  </tr>
+                                                  <tr>
+                                                       <td>Tổng khuyến mãi</td>
+                                                       <th style="text-align:right"><span id="tPromotion">@tProtion.ToString("N0")</span> VNĐ</th>
+                                                  </tr>
+                                                  <tr>
+                                                       <td>Sau khuyến mãi</td>
+                                                       <th style="text-align:right"><span id="Total">@Total.ToString("N0")</span> VNĐ</th>
+                                                  </tr>
+                                                  <tr>
+                                                       <td>Phí vận chuyển</td>
+                                                       <th style="text-align:right"><span id="shippingCost">@shippingCost.ToString("N0")</span> VNĐ</th>
+                                                  </tr>
+                                                  <tr class="total">
+                                                       <th>Thành tiền</th>
+                                                       <td style="text-align:right"><span id="realPrice">@realTotal.ToString("N0")</span> VNĐ</td>
+                                                  </tr>
+                                             </tbody>
+                                        </table>
+                                   </div>
+                              </div>
+                         </div>
+                    </div>
+                    <!-- /.col-lg-3-->
+               </div>
+          </div>
+     </div>
+</div>
+

@@ -1,0 +1,18 @@
+public User TakeUser(string EmailOrUserName, string Password)
+          {
+               User user = db.Users.Where(x => x.Email == EmailOrUserName && x.Password == Password).SingleOrDefault();
+               if (user != null)
+                    return user;
+               user = db.Users.Where(x => x.UserName == EmailOrUserName && x.Password == Password).SingleOrDefault();
+               return user;
+          }
+public bool Login(string EmailOrUserName, string Password)
+          {
+               var rs = db.Users.Count(x => x.Email == EmailOrUserName && x.Password == Password);
+               if (rs > 0)
+                    return true;
+               rs = db.Users.Count(x => x.UserName == EmailOrUserName && x.Password == Password);
+               if (rs > 0)
+                    return true;
+               return false;
+          }

@@ -1,0 +1,124 @@
+﻿@model List<BookMVC.Entities.Order>
+@{
+     ViewBag.Title = "ListOrder";
+     Layout = "~/Views/Shared/_Layout.cshtml";
+     int stt = 0;
+}
+<div class="row" id="list_order">
+     <div class="col-lg-12">
+          <!-- breadcrumb-->
+          <nav aria-label="breadcrumb">
+               <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="#">Home</a></li>
+                    <li aria-current="page" class="breadcrumb-item active">Danh sách đơn hàng</li>
+               </ol>
+          </nav>
+     </div>
+     <div id="customer-orders" class="col-lg-9">
+          <div class="box">
+               <h1>Đơn hàng của bạn</h1>
+               @*<p class="lead">Your orders on one place.</p>*@
+               @*<p class="text-muted">If you have any questions, please feel free to <a href="contact.html">contact us</a>, our customer service center is working for you 24/7.</p>*@
+               @*<hr>*@
+               <div class="table-responsive">
+                    <table class="table table-hover">
+                         <thead>
+                              <tr>
+                                   <th>Đơn hàng</th>
+                                   <th>Ngày đặt</th>
+                                   <th style="text-align:right">Tổng tiền</th>
+                                   <th>Tình trạng</th>
+                                   <th style="text-align:center">Xem chi tiết</th>
+                                   <th style="text-align:center">Hủy đơn hàng</th>
+                              </tr>
+                         </thead>
+                         <tbody>
+                              @foreach (var o in Model)
+                              {
+                                   if (o.Status != 5)
+                                   {
+                                        stt++;
+                                        <tr>
+                                             <th># @stt</th>
+                                             <td>@o.CreateDate</td>
+                                             <td style="text-align:right">@(((decimal)o.TotalPrice).ToString("N0")) VNĐ</td>
+                                             <td>
+                                                  @switch (o.Status)
+                                                  {
+                                                       case -1:
+                                                            {
+                                                                 <span class="badge badge-secondary" style="font-size:16px">Đang hủy</span>
+                                                                 break;
+                                                            }
+
+                                                       case 0:
+                                                            {
+                                                                 <span class="badge badge-info" style="font-size:16px">Đang lấy hàng</span>
+                                                                 break;
+                                                            }
+                                                       case 1:
+                                                            {
+                                                                 <span class="badge badge-primary" style="font-size:16px">Đang giao hàng</span>
+                                                                 break;
+                                                            }
+                                                       case 2:
+                                                            {
+                                                                 <span class="badge badge-warning" style="font-size:16px">Đang thanh toán</span>
+                                                                 break;
+                                                            }
+                                                       case 3:
+                                                            {
+                                                                 <span class="badge badge-success" style="font-size:16px">Đã nhận hàng</span>
+                                                                 break;
+                                                            }
+                                                       case 4:
+                                                            {
+                                                                 <span class="badge badge-danger" style="font-size:16px">Đã hủy</span>
+                                                                 break;
+                                                            }
+                                                       default:
+                                                            {
+                                                                 <span class="badge badge-dark" style="font-size:16px">Không khả dụng</span>
+                                                                 break;
+                                                            }
+                                                  }
+                                             </td>
+                                             <td style="text-align:center"><a href="@Url.Action("OrderDetails","Account",new { orderID = o.ID,number = stt})" class="btn btn-outline-primary btn-sm" data-id="@o.ID" style="font-size:16px"><i class="fa fa-eye"></i></a></td>
+                                             <td style="text-align:center">
+                                                  <a class="btn btn-outline-danger btn-sm btn-cancel-order" style="font-size:16px" data-id="@o.ID" data-status="@o.Status"><i class="fa fa-times"></i></a>
+                                             </td>
+                                        </tr>
+                                   }
+
+                              }
+                         </tbody>
+                    </table>
+               </div>
+          </div>
+     </div>
+     <div class="col-lg-3">
+          <!--
+          *** CUSTOMER MENU ***
+          _________________________________________________________
+          -->
+          <div class="card sidebar-menu">
+               <div class="card-header">
+                    <h3 class="h4 card-title">Danh mục</h3>
+               </div>
+               <div class="card-body">
+                    <ul class="nav nav-pills flex-column">
+                         <a href="@Url.Action("UserProfile","Account")" class="nav-link"><i class="fa fa-user"></i> Thông tin tài khoản</a>
+                         <a href="@Url.Action("ListOrder","Account")" class="nav-link active"><i class="fa fa-list"></i> Danh sách đơn hàng</a>
+                         @*<a href="customer-wishlist.html" class="nav-link"><i class="fa fa-heart"></i> My wishlist</a>*@
+                         <a href="@Url.Action("Logout","User")" class="nav-link"><i class="fa fa-sign-out"></i> Đăng xuất</a>
+                    </ul>
+               </div>
+          </div>
+          <!-- /.col-lg-3-->
+          <!-- *** CUSTOMER MENU END ***-->
+     </div>
+</div>
+<script src="~/assets/Client/js/controller/deleteOrder.js"></script>
+<script>
+     deleteOrder.init();
+</script>

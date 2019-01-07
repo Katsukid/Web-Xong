@@ -1,0 +1,111 @@
+﻿@{
+     var category = (List<BookMVC.Models.CategoryViewModel>)ViewBag.Category;
+     var special = ViewBag.Special as List<BookMVC.Models.SpecialBookCategory>;
+
+     foreach(var bc in special)
+     {
+          
+     }
+     //var bookcategory = (List<BookMVC.Entities.BookCategory>)ViewBag.BookCategory;
+     var authorlocal = (IEnumerable<BookMVC.Models.AuthorViewModel>)ViewBag.AuthorLocal;
+     var authorforgery = (IEnumerable<BookMVC.Models.AuthorViewModel>)ViewBag.AuthorForgery;
+     var publisher = (IEnumerable<BookMVC.Models.PublisherViewModel>)ViewBag.Publisher;
+     var j = 0;
+}
+
+<nav class="navbar navbar-expand-lg bg-light">
+     <div class="container">
+          <a href="@Url.Action("Index","Home")" class="navbar-brand home"><img src="~/assets/Client/images/logo_book.png" alt="Obaju logo" class="d-none d-md-inline-block" style="height:40px;width:100px"><img src="~/assets/Client/img/logo-small.png" alt="Obaju logo" class="d-inline-block d-md-none"><span class="sr-only">Obaju - go to homepage</span></a>
+          <div class="navbar-buttons">
+               <button type="button" data-toggle="collapse" data-target="#navigation" class="btn btn-outline-secondary navbar-toggler"><span class="sr-only">Toggle navigation</span><i class="fa fa-align-justify"></i></button>
+               <button type="button" data-toggle="collapse" data-target="#search" class="btn btn-outline-secondary navbar-toggler"><span class="sr-only">Toggle search</span><i class="fa fa-search"></i></button>
+               <a href="@Url.Action("","Cart",new {id = Session["ID"] })" class="btn btn-outline-secondary navbar-toggler"><i class="fa fa-shopping-cart"></i></a>
+          </div>
+          <div id="navigation" class="collapse navbar-collapse bg-light">
+               <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">@Html.ActionLink("Trang chủ", "Index", "Home", null, new { @class = "nav-link" })</li>
+                    
+                    <li class="nav-item dropdown menu-large">
+                         <a href="#" data-toggle="dropdown" data-hover="dropdown" data-delay="200" class="dropdown-toggle nav-link">Danh mục sách<b class="caret"></b></a>
+                         <ul class="dropdown-menu megamenu">
+                              <li>
+                                   <div class="row">
+                                        @foreach (var c in category)
+                                        {
+                                             if (c.Category.Status == true && c.Category.Name != "Nổi bật")
+                                             {
+                                                  <div class="col-md-6 col-lg-3">
+                                                       <h5>@Html.ActionLink(c.Category.Name, "ByCategory", "Book", new { idCate = c.Category.ID }, new { @class = "nav-link" })</h5>
+                                                       <ul class="list-unstyled mb-3">
+                                                            @foreach (var bookcate in c.lsBookCategory)
+                                                            {
+                                                                 <li class="nav-item text-dark">@Html.ActionLink(bookcate.bookCategory.Name + "(" + bookcate.numberBooks.ToString() + ")", "FilteredByBookCate", "BookBy", new { select_bookcate = bookcate.bookCategory.ID }, new { @class = "nav-link" })</li>
+                                                            }
+                                                       </ul>
+                                                  </div>
+                                             }
+
+                                        }
+                                   </div>
+                              </li>
+                         </ul>
+                    </li>
+                    <li class="nav-item dropdown menu-large">
+                         <a href="#" data-toggle="dropdown" data-hover="dropdown" data-delay="200" class="dropdown-toggle nav-link">Tác giả<b class="caret"></b></a>
+                         <ul class="dropdown-menu megamenu">
+                              <li>
+                                   <div class="row">
+                                        <div class="col-md-6 col-lg-6">
+                                             <h5>Trong nước</h5>
+                                             <ul class="list-unstyled mb-3">
+                                                  @foreach (var al in authorlocal)
+                                                  {
+                                                       <li class="nav-item text-dark">@Html.ActionLink(al.Author.Name.ToString() + "(" + al.numberBooks.ToString() + ")", "FilteredByAuthor", "BookBy", new { select_author = al.Author.ID }, new { @class = "nav-link" })</li>
+                                                  }
+                                             </ul>
+                                        </div>
+                                        <div class="col-md-6 col-lg-6">
+                                             <h5>Quốc tế</h5>
+                                             <ul class="list-unstyled mb-3">
+                                                  @foreach (var af in authorforgery)
+                                                  {
+                                                       <li class="nav-item text-dark">@Html.ActionLink(af.Author.Name.ToString() + "(" + af.numberBooks.ToString() + ")", "FilteredByAuthor", "BookBy", new { select_author = af.Author.ID }, new { @class = "nav-link" })</li>
+                                                  }
+                                             </ul>
+                                        </div>
+                                        @*<div class="col-md-6 col-lg-4">
+                                   <div class="banner"><a href="#"><img src="~/assets/Client/img/banner.jpg" alt="" class="img img-fluid"></a></div>
+                                   <div class="banner"><a href="#"><img src="~/assets/Client/img/banner2.jpg" alt="" class="img img-fluid"></a></div>
+                              </div>*@
+                                   </div>
+                              </li>
+                         </ul>
+                    </li>
+                    <li class="nav-item dropdown menu-large">
+                         <a href="#" data-toggle="dropdown" data-hover="dropdown" data-delay="200" class="dropdown-toggle nav-link">Nhà xuất bản<b class="caret"></b></a>
+                         <ul class="dropdown-menu megamenu">
+                              <li>
+                                   <div class="row">
+                                        @foreach (var p in publisher)
+                                        {
+
+                                             if (j % 5 == 0)
+                                             {@Html.Raw("<div class='col-md-6 col-lg-3'><ul>") } <!--<h5>Nhà xuất bản</h5>-->
+                                             <li class="nav-item text-dark">@Html.ActionLink(p.Publisher.Name + "(" + p.numberBooks +")", "FilteredByPublisher", "BookBy", new { select_publisher = p.Publisher.ID }, new { @class = "nav-link" })</li>
+                                             j++;
+                                             if (j % 5 == 0 & j != 0)
+                                             {@Html.Raw("</ul></div>")}
+                                        }
+                                   </div>
+                              </li>
+                         </ul>
+                    </li>
+               </ul>
+               <div class="navbar-buttons d-flex justify-content-end">
+                    <!-- /.nav-collapse-->
+                    <div id="search-not-mobile" class="navbar-collapse collapse"></div><a data-toggle="collapse" href="#search" class="btn navbar-btn btn-primary d-none d-lg-inline-block"><span class="sr-only">Toggle search</span><i class="fa fa-search"></i></a>
+                    @Html.Action("CartPartial", "Cart")
+               </div>
+          </div>
+     </div>
+</nav>

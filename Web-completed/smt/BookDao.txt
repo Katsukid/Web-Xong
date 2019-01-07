@@ -1,0 +1,21 @@
+ 
+
+BookDao():
+
+public BookViewModel TakeBook(long id)
+          {
+
+               var book = (from b in db.Books
+                           join a in db.Authors on b.Author equals a.ID
+                           join p in db.Publishers on b.Publisher equals p.ID
+                           join r in db.Publishers on b.Released equals r.ID
+                           where (b.ID == id)
+                           select new BookViewModel()
+                           {
+                                Book = b,
+                                Author = a.Name,
+                                Publisher = p.Name,
+                                Released = r.Name,                                
+                           }).Single();
+               return book;
+          }

@@ -1,0 +1,65 @@
+BookMVCDbContext db = new BookMVCDbContext();
+          // Lay Cookie chua thong tin dang nhap phien lam viec truoc
+          [AllowAnonymous]
+          public AccountModelView checkCookie()
+          {
+               AccountModelView user = new AccountModelView()
+               {
+                    Email = Request.Cookies["Login"].Values["Email"],
+                    Password = Request.Cookies["Login"].Values["Password"],
+                    RememberMe = true
+               };
+               if (!(String.IsNullOrEmpty(user.Email) && String.IsNullOrEmpty(user.Password)))
+                    return user;
+               return null;
+          }
+
+          [AllowAnonymous]
+          public ActionResult LoginModal()
+          {
+               if (Request.Cookies["Login"] != null)
+               {
+                    AccountModelView user = checkCookie();
+                    if (user != null)
+                         return PartialView(user);
+               }
+                    return PartialView();
+          }
+          
+          [HttpPost]
+          [ValidateAntiForgeryToken]
+          public JsonResult Login(AccountModelView acc)
+          {
+               if (Membership.ValidateUser(acc.Email, acc.Password))
+               {
+                    var dao = new UserDao();
+                    var us = dao.TakeUser(acc.Email, acc.Password);
+                    //dao.RememberMe(us.ID);
+                    FormsAuthentication.SetAuthCookie(us.UserName, acc.RememberMe);
+                    
+                    //HttpContext.Request.ServerVariables["AUTH_USER"]
+                    if (acc.RememberMe)
+                    {
+                         HttpCookie cookie = new HttpCookie("Login");
+                         cookie.Values.Add("Email", acc.Email);
+                         cookie.Values.Add("Password", acc.Password);
+                         cookie.Expires = DateTime.Now.AddMinutes(5);
+                         Response.Cookies.Add(cookie);
+                    }
+                    Session["UserName"] = us.UserName; // Lay ten dang nhap
+                    Session["UserID"] = us.ID;
+                    return Json(new
+                    {
+                         username = us.UserName,
+                         status = us.Status
+                    });
+               }
+               return Json(new { check = false });
+          }
+          [Authorize]
+          public ActionResult Logout()
+          {
+               FormsAuthentication.SignOut();
+               Session.Clear();
+               return RedirectToAction("Index", "Home");
+          }

@@ -1,0 +1,57 @@
+﻿@*@model BookMVC.Entities.Coupon
+@{ 
+     @ViewBag.Title = "Order";
+     var tQuantity = (decimal)Model.totalQuantity;
+     var tPrice = (decimal)Model.totalPrice;
+     var shippingCost = (decimal)Model.shipping;
+     decimal discount = 0;
+}
+<!-- Coupon-->
+<div class="col-lg-3">
+     <div id="order-summary" class="box">
+          <div class="box-header">
+               <h3 class="mb-0">Order summary</h3>
+          </div>
+          <p class="text-muted">Shipping and additional costs are calculated based on the values you have entered.</p>
+          <div class="table-responsive">
+               <table class="table">
+                    <tbody>
+                         <tr>
+                              <td>Order subtotal</td>
+                              <th style="text-align:right">@(tPrice.ToString("N0")) VNĐ</th>
+                         </tr>
+                         <tr>
+                              <td>Shipping</td>
+                              <th style="text-align:right"> @(shippingCost.ToString("N0")) VNĐ</th>
+                         </tr>
+                         <tr>
+                              <td>Discount</td>
+                              <th style="text-align:right" id="discount">@discount VNĐ</th>
+                         </tr>
+                         <tr class="total">
+                              <td>Total</td>
+                              <th style="text-align:right"><span id="total">@((tPrice + shippingCost).ToString("N0"))</span> VNĐ</th>
+                         </tr>
+                    </tbody>
+               </table>
+          </div>
+     </div>
+     <div class="box">
+          <div class="box-header">
+               <h4 class="mb-0">Coupon code</h4>
+          </div>
+          <p class="text-muted">If you have a coupon code, please enter it in the box below.</p>
+          @using (Html.BeginForm("Coupon", "Cart", FormMethod.Post, new { @id = "form_coupon" }))
+          {
+               @Html.AntiForgeryToken()
+               <div class="input-group">
+                    <input type="text" class="form-control" id="Serial" name="Serial" />
+                    <span class="input-group-append">
+                         <button type="button" class="btn btn-primary" id="submit-coupon"><i class="fa fa-gift"></i></button>
+                    </span>
+               </div>
+               <!-- /input-group-->
+          }
+     </div>
+</div>
+<!-- Coupon end-->*@

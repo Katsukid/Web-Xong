@@ -1,0 +1,170 @@
+﻿@model BookMVC.Entities.User
+@{ 
+     ViewBag.Title = "Thông tin tài khoản";
+     var iday = Model.DayOfBirth.Value.Day;
+     string day = "";
+     if (iday < 10)
+     {
+          day = "0" + iday.ToString();
+     }
+     else
+     {
+         day = iday.ToString();
+     }
+}
+<div class="row">
+<div class="col-lg-9">
+     <div class="box">
+          <h1>Thông tin tài khoản</h1>
+          <p class="lead">Kiểm tra và thay đổi thông tin tài khoản cá nhân tại đây</p>
+          <p class="text-muted">Lưu ý: Để đảm bảo an toàn cho tài khoản của bạn, hãy đổi mật khẩu định kỳ 30 ngày</p>
+          <h3>Đổi mật khẩu</h3>
+          @*@using (Html.BeginForm("ChangePassword","Account",new {id=Model.ID},FormMethod.Post))*@
+          <form action="/Account/ChangePassword" method="post" id="form_password">
+               @Html.AntiForgeryToken()
+               <div class="row">
+                    <div class="col-md-6">
+                         <div class="form-group">
+                              <label for="password_old">Mật khẩu cũ</label>
+                              <input id="password_old" type="password" class="form-control">
+                         </div>
+                         <div style="color:red" id="check_password_old"></div>
+                    </div>
+               </div>
+               <div class="row">
+                    <div class="col-md-6">
+                         <div class="form-group">
+                              <label for="password_1">Mật khẩu mới</label>
+                              <input id="password_1" name="password_1" type="password" class="form-control">
+                         </div>
+                         <div id="check_newpassword"style="color:red"></div>
+                    </div>
+                    <div class="col-md-6">
+                         <div class="form-group">
+                              <label for="password_2">Xác nhận mật khẩu mới</label>
+                              <input id="password_2" type="password" class="form-control">
+                         </div>
+                         <div style="color:red" id="check_repassword"></div>
+                    </div>
+               </div>
+               <!-- /.row-->
+               <div class="col-md-12 text-center">
+                    <button class="btn btn-primary" id="btn_change_pass"><i class="fa fa-save"></i> Tạo mật khẩu mới</button>
+               </div>
+          </form>
+          <h3 class="mt-5">Thông tin tài khoản</h3>
+          <div id="all">
+               <div id="content">
+                    <div class="container">
+                         @using (Html.BeginForm("ChangeProfile", "Account", FormMethod.Post, new { id = "form_change_profile" }))
+                         {
+                              @Html.AntiForgeryToken()
+                              <div class="form-group">
+                                   <div class="row pb-1" style="height:65px">
+                                        <div class="col-lg-6">
+                                             <div class="input-group">
+                                                  <span class="btn btn-primary noneradius-right"><i class="fa fa-user-circle icon" aria-hidden="true"></i></span>
+                                                  @*@Html.TextBoxFor(u => u.Name,new { @class = "form-control", onkeyup = "check('Name')", placeholder="Enter you name"})*@
+                                                  <input type="text" class="form-control" name="Name" id="Name" placeholder="Enter your Name" value="@Model.Name"/>
+                                             </div>
+                                             <div class="text-danger" id="er_Name">@Html.ValidationMessageFor(x => Model.Name)</div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                             <div class="input-group">
+                                                  <span class="btn btn-primary noneradius-right"><i class="fa fa-user icon" aria-hidden="true"></i></span>
+                                                  <input type="text" class="form-control" name="UserName" id="UserName" placeholder="Enter your UserName" onkeyup="check('UserName)" value="@Model.UserName"/>
+
+                                             </div>
+                                             <div class="text-danger" id="er_Email">@Html.ValidationMessageFor(x => Model.UserName)</div>
+                                        </div>
+                                   </div>
+                                   <div class="row pb-1" style="height:65px">
+                                        <div class="col-lg-6">
+                                             <div class="input-group">
+                                                  <span class="btn btn-primary noneradius-right"><i class="fa fa-home icon" aria-hidden="true"></i></span>
+                                                  <input type="text" class="form-control" name="Address" id="Address" placeholder="Enter your address" value="@Model.Address" />
+
+                                                  @*@Html.TextBoxFor(u => u.Email, new { @class="form-control", onkeyup = "check('Email')", placeholder="Enter your email"})*@
+                                             </div>
+                                             <div class="text-danger" id="er_Address">@Html.ValidationMessageFor(x => Model.Address)</div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                             <div class="input-group">
+                                                  <span class="btn btn-primary noneradius-right"><i class="fa fa-envelope-o icon" aria-hidden="true"></i></span>
+                                                  <input type="text"  class="form-control" name="Email" id="Email" placeholder="Enter your Email" value="@Model.Email" />
+
+                                             </div>
+                                             <div class="text-danger" id="er_Email">@Html.ValidationMessageFor(x => Model.Email)</div>
+                                        </div>
+                                   </div>
+                                   <div class="row pb-1" style="height:65px">
+                                        <div class="col-lg-6">
+                                             <div class="input-group">
+                                                  <span class="btn btn-primary noneradius-right"><i class="fa fa-phone icon" aria-hidden="true"></i></span>
+                                                  <input type="tel" class="form-control" name="Phone" id="Phone" placeholder="Enter your Phome number" value="@Model.Phone" />
+
+                                             </div>
+                                             <div class="text-danger" id="er_Phone"> @Html.ValidationMessageFor(x => Model.Phone)</div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                             <div class="input-group">
+                                                  <span class="btn btn-primary noneradius-right"><i class="fa fa-birthday-cake icon" aria-hidden="true"></i></span>
+                                                  <input type="date" class="form-control" name="DayOfBirth" id="DayOfBirth" min="1900-01-01" max="2010-01-01" value="@Model.DayOfBirth.Value.Year-@Model.DayOfBirth.Value.Month-@day" />
+                                                  <br />
+                                             </div>
+                                             <div class="text-danger" id="er_DayOfBirth"> @Html.ValidationMessageFor(x => Model.DayOfBirth)</div>
+                                        </div>
+                                   </div>
+                                   <div class="row pb-1" style="height:65px">
+                                        <div class="col-lg-3"></div>
+                                        <div class="col-lg-6">
+                                             <div class="input-group">
+                                                  <span class="btn btn-primary noneradius-right"><i class="fa fa-lock icon" aria-hidden="true"></i></span>
+                                                  <input type="password" class="form-control" name="password" id="password" placeholder="Enter your Password" />
+                                                  <br />
+                                             </div>
+                                             <div class="text-danger" id="er_password"> @Html.ValidationMessageFor(x => Model.Password)</div>
+                                        </div>
+                                   </div>
+                                   <div class="row pb-1">
+                                        <div class="col-lg-7">
+                                        </div>
+                                        <div class="col-lg-4">
+                                             <button type="submit" class="btn btn-primary">Submit</button>
+                                             <button type="reset" class="btn btn-primary">Reset</button>
+                                             <button type="button" class="btn btn-primary"> Cancel</button>
+                                        </div>
+                                        <div class="col-lg-1">
+
+                                        </div>
+                                   </div>
+                              </div>
+                         }
+                    </div>
+               </div>
+          </div>
+     </div>
+</div>
+<div class="col-lg-3">
+     <!--
+     *** CUSTOMER MENU ***
+     _________________________________________________________
+     -->
+     <div class="card sidebar-menu">
+          <div class="card-header">
+               <h3 class="h4 card-title">Danh mục</h3>
+          </div>
+          <div class="card-body">
+               <ul class="nav nav-pills flex-column">
+                    <a href="@Url.Action("UserProfile","Account")" class="nav-link active"><i class="fa fa-user"></i> Thông tin tài khoản</a>
+                    <a href="@Url.Action("ListOrder","Account")" class="nav-link"><i class="fa fa-list"></i> Danh sách đơn hàng</a>
+                    @*<a href="customer-wishlist.html" class="nav-link"><i class="fa fa-heart"></i> My wishlist</a>*@
+                    <a href="@Url.Action("Logout","User")" class="nav-link"><i class="fa fa-sign-out"></i> Đăng xuất</a>
+               </ul>
+          </div>
+     </div>
+     <!-- /.col-lg-3-->
+     <!-- *** CUSTOMER MENU END ***-->
+</div>
+</div>
+<script src="~/assets/Client/js/controller/accountController.js"></script>

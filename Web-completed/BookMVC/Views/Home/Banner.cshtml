@@ -1,0 +1,15 @@
+﻿@model List<BookMVC.Entities.Slide>
+
+<div class="container">
+     <div class="row">
+          <div class="col-md-12">
+               <div id="main-slider" class="owl-carousel owl-theme">
+                    @foreach (var i in Model)
+                    {
+                         <div class="item"><img src=@i.Image alt="" class="img-fluid"></div>
+                    }
+               </div>
+               <!-- /#main-slider-->
+          </div>
+     </div>
+</div>

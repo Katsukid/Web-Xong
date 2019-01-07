@@ -1,0 +1,89 @@
+﻿@model BookMVC.Entities.Author
+
+@{
+     ViewBag.Title = "Create";
+     Layout = "~/Areas/admins/Views/Shared/_Layouts.cshtml";
+}
+
+@section jsFooter{
+     <script>
+          $('#btnSelectImage').on('click', function (e) {
+               e.preventDefault();
+               var finder = new CKFinder();
+               finder.selectActionFunction = function (url) {
+                    $('#txtImage').val(url);
+               };
+               finder.popup();
+          })
+          var editor = CKEDITOR.replace('txtDescript', {
+               customConfig: '/assets/admin/js/ckeditor/config.js',
+          });
+
+
+          $('.datepicker').datepicker({ format: "dd/mm/yyyy" }).on('changeDate', function (ev) {
+               $(this).datepicker('hide');
+          });
+     </script>
+     <script src="~/assets/admin/dist/js/validate.js"></script>
+}
+
+@using (Html.BeginForm("Create", "Author", FormMethod.Post, new { id = "formAuthor" }))
+{
+     @Html.AntiForgeryToken()
+
+     <div class="form-horizontal">
+          <h4>Author</h4>
+          <hr />
+          @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+          <div class="form-group">
+               @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+               <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.Name, new { @class = "form-control", required = true })
+                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+               </div>
+          </div>
+
+          <div class="form-group">
+               @Html.LabelFor(model => model.DateOfBirth, htmlAttributes: new { @class = "control-label col-md-2 " })
+               <div class="col-md-10">
+                    @Html.EditorFor(model => model.DateOfBirth, new { htmlAttributes = new { @class = "form-control datepicker" }, @class = "datepicker" })
+                    @Html.ValidationMessageFor(model => model.DateOfBirth, "", new { @class = "text-danger" })
+               </div>
+          </div>
+
+          <div class="form-group">
+               @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+               <div class="col-md-10">
+                    @Html.TextAreaFor(model => model.Description, new { AllowHtmlAttribute = new { @class = "form-control" }, @id = "txtDescript" })
+                    @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+               </div>
+          </div>
+
+          <div class="form-group">
+               @Html.LabelFor(model => model.Type, htmlAttributes: new { @class = "control-label col-md-2" })
+               <div class="col-md-10">
+                    @Html.DropDownListFor(model => model.Type, null, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Type, "", new { @class = "text-danger" })
+               </div>
+          </div>
+
+          <div class="form-group">
+               @Html.LabelFor(model => model.Image, htmlAttributes: new { @class = "control-label col-md-2" })
+               <div class="col-md-10">
+                    @Html.EditorFor(model => model.Image, new { htmlAttributes = new { @class = "form-control", @id = "txtImage" } })
+                    <a id="btnSelectImage" href="#">Chọn ảnh</a>
+                    @Html.ValidationMessageFor(model => model.Image, "", new { @class = "text-danger" })
+               </div>
+          </div>
+
+          <div class="form-group">
+               <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-default" />
+               </div>
+          </div>
+     </div>
+}
+
+<div>
+     @Html.ActionLink("Back to List", "Index")
+</div>

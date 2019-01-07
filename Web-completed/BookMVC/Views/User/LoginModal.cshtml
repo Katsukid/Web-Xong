@@ -1,0 +1,112 @@
+﻿@model BookMVC.Models.AccountModelView
+<div id="login-modal" tabindex="-1" role="dialog" aria-labelledby="Login" aria-hidden="true" class="modal fade">
+     <div class="modal-dialog modal-sm">
+          <div class="modal-content">
+               <div class="modal-header">
+                    <h5 class="modal-title">Đăng nhập tài khoản</h5>
+                    <button type="button" data-dismiss="moda" aria-label="Close" class="close close-modal" data-modal="login-modal"><span aria-hidden="true">×</span></button>
+               </div>
+               <div class="modal-body">
+                    @using (Html.BeginForm("Login", "User", FormMethod.Post, new { @id = "form_login" }))
+                    {
+                         @Html.AntiForgeryToken()
+                         <div class="form-group">
+                              @Html.TextBoxFor(u => u.Email, new { @class = "form-control", placeholder = "Email hoặc Tên tài khoản", id = "email-modal" })
+                              @*<input id="email-modal" type="text" placeholder="email" class="form-control">*@
+                         </div>
+                         <div class="form-group">
+                              @Html.TextBoxFor(u => u.Password, new { @class = "form-control", placeholder = "Password", id = "password-modal", type = "Mật khẩu" })
+                              @*<input id="password-modal" type="password" placeholder="password" class="form-control">*@
+                         </div>
+                         <div>
+                              @Html.LabelFor(u => u.RememberMe)
+                              @Html.CheckBoxFor(u => u.RememberMe)
+                         </div>
+                         <p class="text-center">
+                              <button class="btn btn-primary btn-login" type="submit"><i class="fa fa-sign-in"></i> Đăng nhập</button>
+                         </p>
+                    }
+                    <p class="text-center text-muted">Bạn chưa có tài khoản?</p>
+                    <p class="text-center text-muted">@Html.ActionLink("Đang ký ngay!", "Register", "User", null, null) Thật dễ dàng để tạo tài khoản và mua sắm với chúng tôi!</p>
+               </div>
+          </div>
+     </div>
+</div>
+<script>
+     function show_modal(id) {
+          $('#' + id).addClass('show');
+          $('#' + id).removeAttr('aria-hidden');
+          $('#' + id).attr('style', 'display:block;padding-top:16px');
+          $('body').append('<div class="modal-backdrop fade show"></div>');
+          $('body').css('overflow', 'hidden');
+     };
+     function hide_modal(id) {
+          $('#' + id).removeClass('show');
+          $('#' + id).attr('aria-hidden', 'true');
+          $('#' + id).removeAttr('style');
+          $('#' + id).attr('style', 'display:none');
+          $('div').remove('.modal-backdrop.fade.show');
+          $('body').css('overflow', 'scroll');
+     };
+     function the_modal() {
+          $('.close-modal').off('click').on('click', function () {
+               var btn = $(this);
+               var id = btn.data('modal');
+               hide_modal(id);
+               return false;
+          });
+          $('.show-modal').off('click').on('click', function () {
+               var btn = $(this);
+               var id = btn.data('modal');
+               show_modal(id);
+               return false;
+          });
+     };
+     the_modal();
+</script>
+<script>
+     // Them gio hang
+     var addcartitem = {
+          init: function () {
+               addcartitem.responseEvents();
+          },
+          responseEvents: function () {
+               $('.btn-add-cart').off('click').on('click', function (e) {
+                    e.preventDefault();
+                    var btn = $(this);
+                    var ItemID = btn.data('itemid');
+                    $.ajax({
+                         url: '/Cart/AddCartItem',
+                         type: 'POST',
+                         data: { ItemID: ItemID },
+                         dataType: 'json',
+                         success: function (check) {
+                              if (check == 2) {
+                                   var cart;
+                                   $.ajax({
+                                        type: 'POST',
+                                        url: '/Cart/Cart',
+                                        data: cart,
+                                        dataType: 'json',
+                                        success: function (cart) {
+                                             alert('Sản phẩm đã được thêm vào giỏ hàng!');
+                                             $('#cart-icon').text(cart.totalquantity);
+                                        }
+                                   });
+                              }
+                              else if (check == 1) {
+                                   show_modal('login-modal');
+                                   alert("Hãy đăng nhập trước nào");
+                              }
+                              else {
+                                   alert("Số lượng trong kho không đủ");
+                              }
+                         }
+                    })
+                    return false;
+               });
+               return false;
+          }
+     }
+</script>
+

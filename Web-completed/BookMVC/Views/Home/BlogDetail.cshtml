@@ -1,0 +1,12 @@
+﻿@model BookMVC.Models.NewsViewModels
+@{
+     ViewBag.Title = "BlogDetail";
+     Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="content">
+     <div class="container">
+          <h2>@Model.Title</h2>
+          <p class="intro" style="text-align:justify">@Html.Raw(Model.Content)</p>
+     </div>
+</div>
+

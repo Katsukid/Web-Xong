@@ -1,0 +1,131 @@
+﻿@model List<BookMVC.Models.OrderDetailViewModel>
+@{
+     ViewBag.Title = "Kiểm tra - Đơn hàng của tôi";
+     Layout = "~/Views/Shared/_Layout.cshtml";
+     decimal total = 0;
+
+     decimal shippingCost = (decimal)ViewBag.shippingCost;
+     var tPrice = (decimal)ViewBag.totalPrice;
+     var tQuantity = (int)ViewBag.totalQuantity;
+     var tProtion = (decimal)ViewBag.totalPromotion;
+     var Total = tPrice - tProtion;
+     var realTotal = Total + shippingCost;
+}
+
+<div id="all">
+     <div id="content">
+          <div class="container-fluid">
+               <div class="row">
+                    <div class="col-lg-12">
+                         <!-- breadcrumb-->
+                         <nav aria-label="breadcrumb">
+                              <ol class="breadcrumb">
+                                   <li class="breadcrumb-item"><a href="/Home/Index">Trang chủ</a></li>
+                                   <li aria-current="page" class="breadcrumb-item active">Kiểm tra - Đơn hàng của tôi</li>
+                              </ol>
+                         </nav>
+                    </div>
+                    <div id="checkout" class="col-lg-9">
+                         <div class="box">
+                              @using (Html.BeginForm("SaveOrder", "Order", FormMethod.Post))
+                              {
+                                   @Html.AntiForgeryToken()
+                                   <h1>Kiểm tra - Đơn hàng của tôi</h1>
+                                   <div class="nav flex-column flex-md-row nav-pills text-center">
+                                        <a href="@Url.Action("CheckOut","Order")" class="nav-link flex-sm-fill text-sm-center "><i class="fa fa-map-marker"></i>Thông tin người nhận</a>
+                                        <a href="@Url.Action("CheckOut2","Order")" class="nav-link flex-sm-fill text-sm-center "><i class="fa fa-truck"></i>Hình thức vận chuyển</a>
+                                        <a href="@Url.Action("CheckOut3","Order")" class="nav-link flex-sm-fill text-sm-center "><i class="fa fa-money"></i>Hình thức thanh toán</a>
+                                        <a href="#" class="nav-link flex-sm-fill text-sm-center active"><i class="fa fa-eye"></i>Đơn hàng của tôi</a>
+                                   </div>
+                                   <div class="content">
+                                        <div class="table-responsive">
+                                             <table class="table">
+                                                  <thead>
+                                                       <tr>
+                                                            <th colspan="2" style="text-align:center">Sản phẩm</th>
+                                                            <th style="text-align:center">Số lượng</th>
+                                                            <th style="text-align:right">Đơn giá</th>
+                                                            <th style="text-align:right">Khuyến mãi</th>
+                                                            <th style="text-align:center">Thành tiền</th>
+                                                       </tr>
+                                                  </thead>
+                                                  <tbody>
+                                                       @foreach (var i in Model)
+                                                       {
+                                                            total += (decimal)(i.orderdetail.Price * i.orderdetail.Quantity);
+                                                            <tr>
+                                                                 <td><a href="#"><img src="@i.book.Image" alt="@i.book.Name"></a></td>
+                                                                 <td style="width:250px"><a href="#">@i.book.Name</a></td>
+                                                                 <td style="text-align:center" >@i.orderdetail.Quantity</td>
+                                                                 <td style="text-align:right">@(((decimal)i.book.Price).ToString("N0")) VNĐ</td>
+                                                                 <td style="text-align:right">@(((decimal)((i.book.PromotionPrice-i.book.Price)/i.book.Price*100)).ToString("N2")) %</td>
+                                                                 <td style="text-align:right">@(((decimal)(i.orderdetail.Price * i.orderdetail.Quantity)).ToString("N0")) VNĐ</td>
+                                                            </tr>
+                                                       }
+                                                  </tbody>
+                                                  <tfoot>
+                                                       <tr>
+                                                            <th colspan="5">Tổng giá trị đơn hàng sau khuyến mãi <span style="font-size:12px">(Không bao gồm phí vận chuyển)</span></th>
+                                                            <th style="text-align:right">@total.ToString("N0") VNĐ</th>
+                                                       </tr>
+                                                  </tfoot>
+                                             </table>
+                                        </div>
+                                        <!-- /.table-responsive-->
+                                   </div>
+                                   <!-- /.content-->
+                                   <div class="box-footer d-flex justify-content-between">
+                                        <a href="@Url.Action("CheckOut3","Order")" class="btn btn-outline-secondary"><i class="fa fa-chevron-left"></i>Quay lại hình thức thanh toán</a>
+                                        <a href="@Url.Action("Index","Cart")" class="btn btn-outline-info">Trở về giỏ hàng</a>
+                                        <button type="submit" class="btn btn-primary">Đặt hàng ngay<i class="fa fa-chevron-right"></i></button>
+                                   </div>
+                              }
+                               
+                         </div>
+                         <!-- /.box-->
+                    </div>
+                    <!-- /.col-lg-9-->
+                    <div class="col-md-3">
+                         <div id="order-summary" class="card">
+                              <div class="card-header">
+                                   <h3 class="mt-4 mb-4">Đơn hàng dự kiến</h3>
+                              </div>
+                              <div class="card-body">
+                                   <div class="table-responsive">
+                                        <table class="table">
+                                             <tbody>
+                                                  <tr>
+                                                       <td>Số sản phẩm</td>
+                                                       <th style="text-align:center"><span id="tQuantity">@tQuantity sản phẩm</span></th>
+                                                  </tr>
+                                                  <tr>
+                                                       <td>Giá trị đơn hàng</td>
+                                                       <th style="text-align:right"><span id="tPrice">@tPrice.ToString("N0")</span> VNĐ</th>
+                                                  </tr>
+                                                  <tr>
+                                                       <td>Tổng khuyến mãi</td>
+                                                       <th style="text-align:right"><span id="tPromotion">@tProtion.ToString("N0")</span> VNĐ</th>
+                                                  </tr>
+                                                  <tr>
+                                                       <td>Sau khuyến mãi</td>
+                                                       <th style="text-align:right"><span id="Total">@Total.ToString("N0")</span> VNĐ</th>
+                                                  </tr>
+                                                  <tr>
+                                                       <td>Phí vận chuyển</td>
+                                                       <th style="text-align:right"><span id="shippingCost">@shippingCost.ToString("N0")</span> VNĐ</th>
+                                                  </tr>
+                                                  <tr class="total">
+                                                       <th>Thành tiền</th>
+                                                       <td style="text-align:right"><span id="realPrice">@realTotal.ToString("N0")</span> VNĐ</td>
+                                                  </tr>
+                                             </tbody>
+                                        </table>
+                                   </div>
+                              </div>
+                         </div>
+                    </div>
+                    <!-- /.col-lg-3-->
+               </div>
+          </div>
+     </div>
+</div>
